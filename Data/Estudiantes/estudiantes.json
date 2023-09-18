@@ -1,0 +1,20 @@
+[
+	{
+		"legajo": "222",
+		"nombreCompleto": "Pepito Pepon",
+		"direccion": "Calle Falsa 123",
+		"dni": "20100200",
+		"telefono": "12341234",
+		"email": "pepito@gmail.com",
+		"clave": "123"
+	},
+	{
+		"legajo": "333",
+		"nombreCompleto": "Juancito",
+		"direccion": "Calle Verdadera 123",
+		"dni": "30300300",
+		"telefono": "12341234",
+		"email": "juancito@gmail.com",
+		"clave": "123"
+	}
+]
