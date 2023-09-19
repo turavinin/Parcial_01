@@ -30,6 +30,22 @@ namespace Libreria.Repositorios.Handlers
             }
         }
 
+        public void Escribir(string data)
+        {
+            try
+            {
+                using(var writer = new StreamWriter(_path))
+                {
+                    writer.Flush();
+                    writer.WriteLine(data);
+                }
+            }
+            catch (Exception)
+            {
+                throw new ExceptionsInternas("Error al escribir el archivo.");
+            }
+        }
+
         public static DirectoryInfo? ObtenerDirectorioSolucion()
         {
             var directory = new DirectoryInfo(Directory.GetCurrentDirectory());

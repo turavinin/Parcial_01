@@ -16,11 +16,17 @@ namespace Forms
     {
         private AdministracionManager _administracionManager;
         private bool _esAdmin;
+        private bool _ingresoCorrecto;
+
+        #region Propiedades
+        public bool IngresoCorrecto { get => _ingresoCorrecto; set => _ingresoCorrecto = value; }
+        #endregion
 
         public IngresoForm(AdministracionManager administracionManager, bool esAdmin)
         {
             _administracionManager = administracionManager;
             _esAdmin = esAdmin;
+            _ingresoCorrecto = false;
             InitializeComponent();
         }
 
@@ -59,6 +65,8 @@ namespace Forms
                     }
                     else
                     {
+                        this._ingresoCorrecto = true;
+                        this.DialogResult = DialogResult.OK;
                         this.Close();
                     }
                 }

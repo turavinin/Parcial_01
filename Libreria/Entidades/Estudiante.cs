@@ -10,6 +10,7 @@
         private string? _telefono;
         private string? _email;
         private string? _clave;
+        private bool? _cambiarClave;
         #endregion
 
         #region Propiedades
@@ -20,13 +21,14 @@
         public string? Telefono { get => _telefono; set => _telefono = value; }
         public string? Email { get => _email; set => _email = value; }
         public string? Clave { get => _clave; set => _clave = value; }
+        public bool? CambiarClave { get => _cambiarClave; set => _cambiarClave = value; }
         #endregion
 
         #region Constructores
         public Estudiante()
         { 
         }
-        public Estudiante(string nombreCompleto, string direccion, string dni, string telefono, string email, string clave)
+        public Estudiante(string nombreCompleto, string direccion, string dni, string telefono, string email, string clave, bool? cambiarCalve)
         {
             this.NombreCompleto = nombreCompleto;
             this.Direccion = direccion;
@@ -34,6 +36,7 @@
             this.Telefono = telefono;
             this.Email = email;
             this.Clave = clave;
+            this.CambiarClave = cambiarCalve;
             this.Legajo = AsignarLegajo();
         }
         #endregion

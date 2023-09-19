@@ -22,14 +22,32 @@ namespace Forms
 
         private void btnIngresoAdmin_Click(object sender, EventArgs e)
         {
-            var ingresoFrom = new IngresoForm(_administracionManager, true);
-            ingresoFrom.ShowDialog();
+            IniciarIngresoFrom(true);
         }
 
         private void btnIngresoEstudiante_Click(object sender, EventArgs e)
         {
-            var ingresoFrom = new IngresoForm(_administracionManager, false);
-            ingresoFrom.ShowDialog();
+            IniciarIngresoFrom(false);
+        }
+
+        private void IniciarIngresoFrom(bool esAdmin)
+        {
+            var ingresoFrom = new IngresoForm(_administracionManager, esAdmin);
+            var result = ingresoFrom.ShowDialog();
+
+            if (result == DialogResult.OK && ingresoFrom.IngresoCorrecto)
+            {
+                if(esAdmin)
+                {
+                    IniciarAdministracionEstudiantes();
+                }
+            }
+        }
+
+        private void IniciarAdministracionEstudiantes()
+        {
+            var adminEstudiantes = new AdministracionEstudiantesForm(_administracionManager);
+            var result = adminEstudiantes.ShowDialog();
         }
     }
 }

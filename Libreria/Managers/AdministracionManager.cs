@@ -26,6 +26,15 @@ namespace Libreria.Managers
             return LoginEstudiante(usuario, clave);
         }
 
+        public bool RegistrarEstudiante(Estudiante estudiante)
+        {
+            // Validar estudiante + validacion contra base
+
+            _estudianteRepositorio.Post(estudiante);
+
+            return true;
+        }
+
         #region Private
         private bool LoginAdministrador(string correo, string clave)
         {
