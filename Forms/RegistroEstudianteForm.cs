@@ -1,5 +1,7 @@
 ﻿using Forms.Helpers;
 using Libreria.Entidades;
+using Libreria.Exceptions;
+using Libreria.Exceptions.Enums;
 using Libreria.Managers;
 using System;
 using System.Collections.Generic;
@@ -31,14 +33,15 @@ namespace Forms
 
         private void btnAceptarEstudiante_Click(object sender, EventArgs e)
         {
-            var ingresoValido = DataRegistroValida();
-            if (!ingresoValido)
+            if (!DataRegistroValida() || !RegistrarEstudiante())
             {
                 MensajesHelper.MostrarListaErrores("Se encontraron los siguientes errores:");
             }
             else
             {
-                var registroValido = RegistrarEstudiante();
+                this.DialogResult = DialogResult.OK;
+                MensajesHelper.MensajeAceptar("Estudiante creado con éxito.");
+                this.Close();
             }
         }
 
@@ -77,23 +80,30 @@ namespace Forms
                 esValido = false;
             }
 
-            if (string.IsNullOrWhiteSpace(this.txtClaveEstudiante.Text))
-            {
-                MensajesHelper.Errores.Add($"La clave es obligatoria.");
-                esValido = false;
-            }
-
-
             return esValido;
         }
 
         private bool RegistrarEstudiante()
         {
-            var estudiante = new Estudiante(this.txtNombreCompletoEstudiante.Text, this.txtDireccionEstudiante.Text,
-                                             this.txtDniEstudiante.Text, this.txtTelefonoEstudiante.Text, 
-                                             this.txtEmailEstudiante.Text, this.txtClaveEstudiante.Text, this.chkCambiarClave.Checked);
+            try
+            {
+                var estudiante = new Estudiante(this.txtNombreCompletoEstudiante.Text, this.txtDireccionEstudiante.Text,
+                                 this.txtDniEstudiante.Text, this.txtTelefonoEstudiante.Text,
+                                 this.txtEmailEstudiante.Text, this.chkCambiarClave.Checked, true);
 
-            return _administracionManager.RegistrarEstudiante(estudiante);
+                return _administracionManager.RegistrarEstudiante(estudiante);
+            }
+            catch (Exception ex)
+            {
+                MensajesHelper.Errores = new List<string>();
+
+                if (ex is ExceptionsInternas exInterna && exInterna.TipoError == TipoError.ErrorCrearUsuario)
+                {
+                    MensajesHelper.Errores = exInterna.Errores;
+                }
+
+                return false;
+            }
         }
     }
 }

@@ -89,6 +89,7 @@
             Controls.Add(btnIngresoEstudiante);
             Controls.Add(btnIngresoAdmin);
             Controls.Add(panel1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "InicioForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Sysacad";

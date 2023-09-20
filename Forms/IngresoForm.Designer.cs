@@ -116,6 +116,7 @@
             Controls.Add(txtClave);
             Controls.Add(txtUsuario);
             Controls.Add(pnlIngreso);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "IngresoForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Ingreso";

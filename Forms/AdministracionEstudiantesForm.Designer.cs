@@ -31,6 +31,7 @@
             panel1 = new Panel();
             label1 = new Label();
             btnRegistrarEstudiante = new Button();
+            btnGestionarCursos = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -67,13 +68,28 @@
             btnRegistrarEstudiante.UseVisualStyleBackColor = true;
             btnRegistrarEstudiante.Click += btnRegistrarEstudiante_Click;
             // 
+            // btnGestionarCursos
+            // 
+            btnGestionarCursos.Anchor = AnchorStyles.None;
+            btnGestionarCursos.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
+            btnGestionarCursos.Location = new Point(225, 292);
+            btnGestionarCursos.Name = "btnGestionarCursos";
+            btnGestionarCursos.Size = new Size(342, 53);
+            btnGestionarCursos.TabIndex = 3;
+            btnGestionarCursos.Text = "GESTIONAR CURSOS";
+            btnGestionarCursos.UseMnemonic = false;
+            btnGestionarCursos.UseVisualStyleBackColor = true;
+            btnGestionarCursos.Click += btnGestionarCursos_Click;
+            // 
             // AdministracionEstudiantesForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(787, 450);
+            Controls.Add(btnGestionarCursos);
             Controls.Add(btnRegistrarEstudiante);
             Controls.Add(panel1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "AdministracionEstudiantesForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Administracion de estudiantes";
@@ -87,5 +103,6 @@
         private Panel panel1;
         private Label label1;
         private Button btnRegistrarEstudiante;
+        private Button btnGestionarCursos;
     }
 }

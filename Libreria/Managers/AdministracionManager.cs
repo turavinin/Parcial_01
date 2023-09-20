@@ -1,4 +1,7 @@
 ﻿using Libreria.Entidades;
+using Libreria.Exceptions;
+using Libreria.Exceptions.Enums;
+using Libreria.Helpers;
 using Libreria.Repositorios;
 
 namespace Libreria.Managers
@@ -7,13 +10,19 @@ namespace Libreria.Managers
     {
         private EstudianteRepositorio _estudianteRepositorio;
         private AdministradorRepositorio _administradorRepositorio;
+        private CursoRepositorio _cursoRepositorio;
+
         private Estudiante _estudiante;
         private Administrador _administrador;
+
+        private EmailHelper _emailHelper;
 
         public AdministracionManager()
         {
             _estudianteRepositorio = new EstudianteRepositorio();
             _administradorRepositorio = new AdministradorRepositorio();
+            _cursoRepositorio = new CursoRepositorio();
+            _emailHelper = new EmailHelper();
         }
 
         public bool LoginUsuario(string usuario, string clave, bool isAdmin)
@@ -28,12 +37,39 @@ namespace Libreria.Managers
 
         public bool RegistrarEstudiante(Estudiante estudiante)
         {
-            // Validar estudiante + validacion contra base
+            _administrador.AsginarLegajoEstudiante(estudiante);
+
+            if (!estudiante.Validar())
+            {
+                throw new ExceptionsInternas(estudiante.ErroresValidacion, TipoError.ErrorCrearUsuario);
+            }
 
             _estudianteRepositorio.Post(estudiante);
+            _emailHelper.EnviarEmail(estudiante.Email, $"Estudiante creado. Legajo: {estudiante.Legajo}");
 
             return true;
         }
+
+        #region Cursos
+        public List<Curso>? GetCursos()
+        {
+            return _cursoRepositorio.Get();
+        } 
+
+        public bool CrearCurso(Curso curso)
+        {
+            // Validar curso contra base
+
+            _cursoRepositorio.Post(curso);
+            return true;
+        }
+
+        public bool EliminarCurso(string codigo)
+        {
+            _cursoRepositorio.Delete(codigo);
+            return true;
+        }
+        #endregion
 
         #region Private
         private bool LoginAdministrador(string correo, string clave)

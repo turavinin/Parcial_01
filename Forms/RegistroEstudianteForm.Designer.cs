@@ -36,8 +36,6 @@
             lblDniEstudiante = new Label();
             txtEmailEstudiante = new TextBox();
             lblEmailEstudiante = new Label();
-            txtClaveEstudiante = new TextBox();
-            lblClaveEstudiante = new Label();
             txtTelefonoEstudiante = new TextBox();
             lblTelefonoEstudiante = new Label();
             chkCambiarClave = new CheckBox();
@@ -113,26 +111,9 @@
             lblEmailEstudiante.TabIndex = 17;
             lblEmailEstudiante.Text = "Email";
             // 
-            // txtClaveEstudiante
-            // 
-            txtClaveEstudiante.Location = new Point(332, 141);
-            txtClaveEstudiante.Name = "txtClaveEstudiante";
-            txtClaveEstudiante.Size = new Size(275, 27);
-            txtClaveEstudiante.TabIndex = 20;
-            // 
-            // lblClaveEstudiante
-            // 
-            lblClaveEstudiante.AutoSize = true;
-            lblClaveEstudiante.Font = new Font("Agency FB", 13.2000008F, FontStyle.Bold, GraphicsUnit.Point);
-            lblClaveEstudiante.Location = new Point(332, 110);
-            lblClaveEstudiante.Name = "lblClaveEstudiante";
-            lblClaveEstudiante.Size = new Size(54, 28);
-            lblClaveEstudiante.TabIndex = 19;
-            lblClaveEstudiante.Text = "Clave";
-            // 
             // txtTelefonoEstudiante
             // 
-            txtTelefonoEstudiante.Location = new Point(30, 299);
+            txtTelefonoEstudiante.Location = new Point(332, 141);
             txtTelefonoEstudiante.Name = "txtTelefonoEstudiante";
             txtTelefonoEstudiante.Size = new Size(275, 27);
             txtTelefonoEstudiante.TabIndex = 22;
@@ -141,7 +122,7 @@
             // 
             lblTelefonoEstudiante.AutoSize = true;
             lblTelefonoEstudiante.Font = new Font("Agency FB", 13.2000008F, FontStyle.Bold, GraphicsUnit.Point);
-            lblTelefonoEstudiante.Location = new Point(30, 268);
+            lblTelefonoEstudiante.Location = new Point(332, 110);
             lblTelefonoEstudiante.Name = "lblTelefonoEstudiante";
             lblTelefonoEstudiante.Size = new Size(76, 28);
             lblTelefonoEstudiante.TabIndex = 21;
@@ -162,7 +143,7 @@
             // 
             btnAceptarEstudiante.Anchor = AnchorStyles.None;
             btnAceptarEstudiante.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnAceptarEstudiante.Location = new Point(141, 367);
+            btnAceptarEstudiante.Location = new Point(137, 303);
             btnAceptarEstudiante.Name = "btnAceptarEstudiante";
             btnAceptarEstudiante.Size = new Size(342, 45);
             btnAceptarEstudiante.TabIndex = 24;
@@ -175,7 +156,7 @@
             // 
             btnCancelarEstudiante.Anchor = AnchorStyles.None;
             btnCancelarEstudiante.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnCancelarEstudiante.Location = new Point(141, 418);
+            btnCancelarEstudiante.Location = new Point(137, 354);
             btnCancelarEstudiante.Name = "btnCancelarEstudiante";
             btnCancelarEstudiante.Size = new Size(342, 45);
             btnCancelarEstudiante.TabIndex = 25;
@@ -188,14 +169,12 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(633, 496);
+            ClientSize = new Size(633, 447);
             Controls.Add(btnCancelarEstudiante);
             Controls.Add(btnAceptarEstudiante);
             Controls.Add(chkCambiarClave);
             Controls.Add(txtTelefonoEstudiante);
             Controls.Add(lblTelefonoEstudiante);
-            Controls.Add(txtClaveEstudiante);
-            Controls.Add(lblClaveEstudiante);
             Controls.Add(txtEmailEstudiante);
             Controls.Add(lblEmailEstudiante);
             Controls.Add(txtDniEstudiante);
@@ -204,7 +183,9 @@
             Controls.Add(lblDireccionEstudiante);
             Controls.Add(txtNombreCompletoEstudiante);
             Controls.Add(lblNombreCompletoEstudiante);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "RegistroEstudianteForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Registro estudiante";
             ResumeLayout(false);
             PerformLayout();
@@ -220,8 +201,6 @@
         private Label lblDniEstudiante;
         private TextBox txtEmailEstudiante;
         private Label lblEmailEstudiante;
-        private TextBox txtClaveEstudiante;
-        private Label lblClaveEstudiante;
         private TextBox txtTelefonoEstudiante;
         private Label lblTelefonoEstudiante;
         private CheckBox chkCambiarClave;

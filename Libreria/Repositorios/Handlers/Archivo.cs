@@ -1,4 +1,5 @@
 ﻿using Libreria.Exceptions;
+using Libreria.Exceptions.Enums;
 
 namespace Libreria.Repositorios.Handlers
 {
@@ -26,7 +27,7 @@ namespace Libreria.Repositorios.Handlers
             }
             catch (Exception)
             {
-                throw new ExceptionsInternas("Error al leer el archivo.");
+                throw new ExceptionsInternas("Error al leer el archivo.", TipoError.ErrorArchivo);
             }
         }
 
@@ -42,7 +43,7 @@ namespace Libreria.Repositorios.Handlers
             }
             catch (Exception)
             {
-                throw new ExceptionsInternas("Error al escribir el archivo.");
+                throw new ExceptionsInternas("Error al escribir el archivo.", TipoError.ErrorArchivo);
             }
         }
 

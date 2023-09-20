@@ -1,33 +1,36 @@
 ﻿namespace Libreria.Entidades
 {
-    public class Administrador
+    public class Administrador : Usuario
     {
         #region Atributos
         private string? _nombreCompleto;
         private string? _usuario;
-        private string? _clave;
         #endregion
 
         #region Propiedades
         public string? NombreCompleto { get => _nombreCompleto; set => _nombreCompleto = value; }
         public string? Usuario { get => _usuario; set => _usuario = value; }
-        public string? Clave { get => _clave; set => _clave = value; }
         #endregion
 
         #region Constructores
-        public Administrador()
-        {
-                
-        }
-        public Administrador(string nombreCompleto, string usuario, string clave)
+        public Administrador(string nombreCompleto, string usuario, string clave) : base(clave)
         {
             this.NombreCompleto = nombreCompleto;
             this.Usuario = usuario;
-            this.Clave = clave;
         }
         #endregion
 
+        public void AsginarLegajoEstudiante(Estudiante estudiante)
+        {
+            estudiante.Legajo = AsignarLegajo();
+        }
+
         #region Privados
+        private static string AsignarLegajo()
+        {
+            var random = new Random();
+            return random.Next(1, 10000).ToString();
+        }
         #endregion
     }
 }

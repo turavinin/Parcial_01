@@ -51,24 +51,15 @@ namespace Forms
         {
             try
             {
-                var ingresoValido = IngresoValido();
-                if (!ingresoValido)
+                if (!IngresoValido() || !LoginUsuario())
                 {
                     MensajesHelper.MostrarListaErrores("Se encontraron los siguientes errores:");
                 }
                 else
                 {
-                    var loginvalido = LoginUsuario();
-                    if(!loginvalido)
-                    {
-                        MensajesHelper.MostrarError("El login es invalido. Intente de nuevo.");
-                    }
-                    else
-                    {
-                        this._ingresoCorrecto = true;
-                        this.DialogResult = DialogResult.OK;
-                        this.Close();
-                    }
+                    this._ingresoCorrecto = true;
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
                 }
             }
             catch (Exception ex)
@@ -102,7 +93,14 @@ namespace Forms
             var usuario = this.txtUsuario.Text;
             var clave = this.txtClave.Text;
 
-            return _administracionManager.LoginUsuario(usuario, clave, _esAdmin);
+            var loginValido = _administracionManager.LoginUsuario(usuario, clave, _esAdmin);
+
+            if (!loginValido)
+            {
+                MensajesHelper.Errores.Add($"Error al ingresar.");
+            }
+
+            return loginValido;
         }
     }
 }

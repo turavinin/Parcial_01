@@ -37,7 +37,7 @@ namespace Forms
 
             if (result == DialogResult.OK && ingresoFrom.IngresoCorrecto)
             {
-                if(esAdmin)
+                if (esAdmin)
                 {
                     IniciarAdministracionEstudiantes();
                 }

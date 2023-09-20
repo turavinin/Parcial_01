@@ -24,7 +24,13 @@ namespace Forms
         private void btnRegistrarEstudiante_Click(object sender, EventArgs e)
         {
             var registroEstudiantes = new RegistroEstudianteForm(_administracionManager);
-            var result = registroEstudiantes.ShowDialog();
+            registroEstudiantes.ShowDialog();
+        }
+
+        private void btnGestionarCursos_Click(object sender, EventArgs e)
+        {
+            var cursosFrom = new CursosForm(_administracionManager);
+            cursosFrom.ShowDialog();
         }
     }
 }

@@ -31,7 +31,6 @@ namespace Libreria.Repositorios
         public Estudiante? Get(string legajo, string clave)
         {
             var estudiantes = Get();
-
             if (estudiantes != null && estudiantes.Count > 0)
             {
                 return estudiantes?.FirstOrDefault(x => x.Legajo == legajo && x.Clave == clave);
@@ -43,13 +42,11 @@ namespace Libreria.Repositorios
         public void Post(Estudiante estudiante)
         {
             var estudiantesExistentes = this.Get();
+            estudiantesExistentes ??= new List<Estudiante>();
 
-            if (estudiantesExistentes != null)
-            {
-                estudiantesExistentes.Add(estudiante);
-                var estudiantesJson = JsonConvert.SerializeObject(estudiantesExistentes);
-                _archivo.Escribir(estudiantesJson);
-            }
+            estudiantesExistentes.Add(estudiante);
+            var estudiantesJson = JsonConvert.SerializeObject(estudiantesExistentes);
+            _archivo.Escribir(estudiantesJson);
         }
     }
 }
