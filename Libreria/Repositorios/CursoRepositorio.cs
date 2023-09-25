@@ -29,12 +29,42 @@ namespace Libreria.Repositorios
             return data;
         }
 
+        public Curso? Get(string codigo)
+        {
+            var cursos = Get();
+
+            if (cursos.Any())
+            {
+                return cursos?.FirstOrDefault(x => string.Equals(x.Codigo, codigo, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return default;
+        }
+
         public void Post(Curso curso)
         {
             var cursos = this.Get();
             cursos ??= new List<Curso>();
 
             cursos.Add(curso);
+            var cursosJson = JsonConvert.SerializeObject(cursos);
+            _archivo.Escribir(cursosJson);
+        }
+
+        public void Update(Curso curso, string codigoCursoGuardado)
+        {
+            var cursos = this.Get();
+            cursos ??= new List<Curso>();
+            var cursoExistente = cursos?.FirstOrDefault(x => string.Equals(x.Codigo, codigoCursoGuardado, StringComparison.OrdinalIgnoreCase));
+
+            if (cursoExistente != null)
+            {
+                cursoExistente.Codigo = curso.Codigo;
+                cursoExistente.Nombre = curso.Nombre;
+                cursoExistente.Descripcion = curso.Descripcion;
+                cursoExistente.CupoMaximo = curso.CupoMaximo;
+            }
+
             var cursosJson = JsonConvert.SerializeObject(cursos);
             _archivo.Escribir(cursosJson);
         }

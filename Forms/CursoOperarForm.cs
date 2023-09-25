@@ -19,11 +19,13 @@ namespace Forms
     {
         private AdministracionManager _administracionManager;
         private bool _esCrear;
+        private string _codigo;
 
-        public CursoOperarForm(AdministracionManager administracionManager, bool esCrear)
+        public CursoOperarForm(AdministracionManager administracionManager, string? codigo = null)
         {
             _administracionManager = administracionManager;
-            _esCrear = esCrear;
+            _esCrear = codigo is null;
+            _codigo = codigo;
 
             InitializeComponent();
         }
@@ -31,6 +33,11 @@ namespace Forms
         private void CursoOperarForm_Load(object sender, EventArgs e)
         {
             this.Text = _esCrear ? "Crear curso" : "Editar curso";
+
+            if (!_esCrear && !string.IsNullOrEmpty(_codigo))
+            {
+                IniciarFormCursoExistente();
+            }
         }
 
         private void btnAceptarCurso_Click(object sender, EventArgs e)
@@ -117,7 +124,37 @@ namespace Forms
 
         private bool EditarCurso()
         {
-            return true;
+            try
+            {
+                var curso = new Curso(this.txtNombreCurso.Text, this.txtCodigoCurso.Text,
+                                      this.txtDescripcionCurso.Text, int.Parse(this.txtCupoMaximo.Text));
+
+                return _administracionManager.EditarCurso(curso, _codigo);
+            }
+            catch (Exception ex)
+            {
+                MensajesHelper.Errores = new List<string>();
+
+                if (ex is ExceptionsInternas exInterna && exInterna.TipoError == TipoError.ErrorEditarCurso)
+                {
+                    MensajesHelper.Errores = exInterna.Errores;
+                }
+
+                return false;
+            }
+        }
+
+        private void IniciarFormCursoExistente()
+        {
+            var curso = _administracionManager.GetCurso(_codigo);
+
+            if (curso != null)
+            {
+                this.txtNombreCurso.Text = curso.Nombre;
+                this.txtDescripcionCurso.Text = curso.Descripcion;
+                this.txtCodigoCurso.Text = curso.Codigo;
+                this.txtCupoMaximo.Text = curso.CupoMaximo.ToString();
+            }
         }
     }
 }

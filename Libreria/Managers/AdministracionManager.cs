@@ -35,6 +35,7 @@ namespace Libreria.Managers
             return LoginEstudiante(usuario, clave);
         }
 
+        #region Estudiante
         public bool RegistrarEstudiante(Estudiante estudiante)
         {
             _administrador.AsginarLegajoEstudiante(estudiante);
@@ -48,7 +49,8 @@ namespace Libreria.Managers
             _emailHelper.EnviarEmail(estudiante.Email, $"Estudiante creado. Legajo: {estudiante.Legajo}");
 
             return true;
-        }
+        } 
+        #endregion
 
         #region Cursos
         public List<Curso>? GetCursos()
@@ -56,11 +58,32 @@ namespace Libreria.Managers
             return _cursoRepositorio.Get();
         } 
 
+        public Curso? GetCurso(string codigo)
+        {
+            return _cursoRepositorio.Get(codigo);
+        }
+
         public bool CrearCurso(Curso curso)
         {
-            // Validar curso contra base
+            if (!curso.Validar())
+            {
+                throw new ExceptionsInternas(curso.ErroresValidacion, TipoError.ErrorCrearCurso);
+            }
 
+            curso.Codigo = curso.Codigo.ToUpper();
             _cursoRepositorio.Post(curso);
+            return true;
+        }
+
+        public bool EditarCurso(Curso curso, string codigoCursoGuardado)
+        {
+            if (!curso.Validar(true, codigoCursoGuardado))
+            {
+                throw new ExceptionsInternas(curso.ErroresValidacion, TipoError.ErrorEditarCurso);
+            }
+
+            curso.Codigo = curso.Codigo.ToUpper();
+            _cursoRepositorio.Update(curso, codigoCursoGuardado);
             return true;
         }
 

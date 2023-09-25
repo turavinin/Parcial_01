@@ -46,15 +46,28 @@ namespace Forms
 
         private void btnAgregarCurso_Click(object sender, EventArgs e)
         {
-            var registroEstudiantes = new CursoOperarForm(_administracionManager, true);
+            var registroEstudiantes = new CursoOperarForm(_administracionManager);
             registroEstudiantes.FormClosed += ActualizarAlCerrar;
             registroEstudiantes.ShowDialog();
         }
 
         private void btnEditarCurso_Click(object sender, EventArgs e)
         {
-            var registroEstudiantes = new CursoOperarForm(_administracionManager, false);
-            registroEstudiantes.ShowDialog();
+            if (this.dgvListaCursos.SelectedRows.Count > 0)
+            {
+                var codigo = this.ObtenerCodigoCursoSeleccionado();
+
+                if (!string.IsNullOrEmpty(codigo))
+                {
+                    var edicionEstudiante = new CursoOperarForm(_administracionManager, codigo);
+                    edicionEstudiante.FormClosed += ActualizarAlCerrar;
+                    edicionEstudiante.ShowDialog();                    
+                }
+            }
+            else
+            {
+                MensajesHelper.MensajeAceptar("No hay cursos para editar.");
+            }
         }
 
         private void btnEliminarCurso_Click(object sender, EventArgs e)

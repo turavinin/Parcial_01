@@ -1,12 +1,12 @@
 [
 	{
 		"nombreCompleto": "Juan Admin",
-		"usuario": "123",
-		"clave": "123"
+		"usuario": "1",
+		"clave": "1"
 	},
 	{
 		"nombreCompleto": "Mari Admin",
-		"usuario": "234",
-		"clave": "234"
+		"usuario": "mari",
+		"clave": "mari"
 	}
 ]

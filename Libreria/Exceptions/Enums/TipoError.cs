@@ -6,6 +6,7 @@
         ErrorArchivo,
         ErrorLogin,
         ErrorCrearUsuario,
-        ErrorCrearCurso
+        ErrorCrearCurso,
+        ErrorEditarCurso
     }
 }
