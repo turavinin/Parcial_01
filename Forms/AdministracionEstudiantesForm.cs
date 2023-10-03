@@ -32,5 +32,10 @@ namespace Forms
             var cursosFrom = new CursosForm(_administracionManager);
             cursosFrom.ShowDialog();
         }
+
+        private void btnCerrarAdminEst_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

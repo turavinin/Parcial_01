@@ -1,1 +1,1 @@
-[{"Legajo":"5234","NombreCompleto":"Juancito Perez","Direccion":"Larrea 222","Dni":"199393222","Telefono":"1132324141","Email":"juan@gmail.com","CambiarClave":true,"ErroresValidacion":[],"Clave":"1234"}]
+[{"Legajo":"1","NombreCompleto":"Pedrio","Direccion":"Avenida 1","Dni":"29929194","Telefono":"12312312","Email":"pedri@gmail.com","CambiarClave":false,"Clave":"1"},{"Legajo":"2","NombreCompleto":"Estudiante2","Direccion":"asdfg","Dni":"123123","Telefono":"231231","Email":"sadsa@asda.com","CambiarClave":false,"Clave":"2"}]

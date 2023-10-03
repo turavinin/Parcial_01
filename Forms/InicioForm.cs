@@ -41,6 +41,10 @@ namespace Forms
                 {
                     IniciarAdministracionEstudiantes();
                 }
+                else
+                {
+                    IniciarAdministracionInscripciones();
+                }
             }
         }
 
@@ -48,6 +52,23 @@ namespace Forms
         {
             var adminEstudiantes = new AdministracionEstudiantesForm(_administracionManager);
             var result = adminEstudiantes.ShowDialog();
+        }
+
+        private void IniciarAdministracionInscripciones()
+        {
+            DialogResult formNuevaClaveResult = DialogResult.None;
+
+            if (_administracionManager.Estudiante.CambiarClave == true)
+            {
+                var formNuevaClave = new EstudianteClaveForm(_administracionManager);
+                formNuevaClaveResult = formNuevaClave.ShowDialog();
+            }
+
+            if (formNuevaClaveResult != DialogResult.Cancel)
+            {
+                var adminInscripciones = new AdministracionInscripcionesForm(_administracionManager);
+                var result = adminInscripciones.ShowDialog();
+            }
         }
     }
 }

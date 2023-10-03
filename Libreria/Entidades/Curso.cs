@@ -1,4 +1,5 @@
 ﻿using Libreria.Repositorios;
+using Newtonsoft.Json;
 
 namespace Libreria.Entidades
 {
@@ -9,6 +10,7 @@ namespace Libreria.Entidades
         private string? _codigo;
         private string? _descripcion;
         private int? _cupoMaximo;
+        private int? _aula;
 
         private List<string> _erroresValidacion;
         #endregion
@@ -18,6 +20,9 @@ namespace Libreria.Entidades
         public string? Codigo { get => _codigo; set => _codigo = value; }
         public string? Descripcion { get => _descripcion; set => _descripcion = value; }
         public int? CupoMaximo { get => _cupoMaximo; set => _cupoMaximo = value; }
+        public int? Aula { get => _aula; set => _aula = value; }
+
+        [JsonIgnore]
         public List<string> ErroresValidacion { get => _erroresValidacion; }
         #endregion
 
@@ -28,6 +33,12 @@ namespace Libreria.Entidades
             this.Codigo = codigo;
             this.Descripcion = descripcion;
             this.CupoMaximo = cupoMaximo;
+        }
+
+        [JsonConstructor]
+        public Curso(string nombre, string codigo, string descripcion, int cupoMaximo, int? aula) : this(nombre, codigo, descripcion, cupoMaximo)
+        {
+            this.Aula = aula;
         }
         #endregion
 

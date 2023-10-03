@@ -13,6 +13,7 @@ namespace Libreria.Entidades
         private string? _telefono;
         private string? _email;
         private bool? _cambiarClave;
+        private List<Curso> _cursos;
 
         private List<string> _erroresValidacion;
         #endregion
@@ -25,6 +26,11 @@ namespace Libreria.Entidades
         public string? Telefono { get => _telefono; set => _telefono = value; }
         public string? Email { get => _email; set => _email = value; }
         public bool? CambiarClave { get => _cambiarClave; set => _cambiarClave = value; }
+
+        [JsonIgnore]
+        public List<Curso> Cursos { get => _cursos; internal set => _cursos = value; }
+
+        [JsonIgnore]
         public List<string> ErroresValidacion { get => _erroresValidacion; }
         #endregion
 
@@ -47,33 +53,36 @@ namespace Libreria.Entidades
         }
         #endregion
 
-        public override bool Validar()
+        public override bool Validar(bool esEditar = false)
         {
             _erroresValidacion = new List<string>();
-            var repositorio = new EstudianteRepositorio();
 
             if (!base.Validar())
             {
                 _erroresValidacion.Add("Clave inválida");
             }
 
-            var estudiantes = repositorio.Get();
-
-            if (estudiantes != null)
+            if(!esEditar)
             {
-                if (estudiantes.Any(x => x.Email == _email))
-                {
-                    _erroresValidacion.Add("El email ya esta utilizado.");
-                }
+                var repositorio = new EstudianteRepositorio();
+                var estudiantes = repositorio.Get();
 
-                if (estudiantes.Any(x => x.Legajo == _legajo))
+                if (estudiantes != null)
                 {
-                    _erroresValidacion.Add("El legajo generado ya es utilizado.");
-                }
+                    if (estudiantes.Any(x => x.Email == _email))
+                    {
+                        _erroresValidacion.Add("El email ya esta utilizado.");
+                    }
 
-                if (estudiantes.Any(x => x.Dni == _dni))
-                {
-                    _erroresValidacion.Add("El DNI ya esta utilizado");
+                    if (estudiantes.Any(x => x.Legajo == _legajo))
+                    {
+                        _erroresValidacion.Add("El legajo generado ya es utilizado.");
+                    }
+
+                    if (estudiantes.Any(x => x.Dni == _dni))
+                    {
+                        _erroresValidacion.Add("El DNI ya esta utilizado");
+                    }
                 }
             }
 

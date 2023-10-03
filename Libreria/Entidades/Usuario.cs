@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Libreria.Entidades
+﻿namespace Libreria.Entidades
 {
     public class Usuario
     {
@@ -24,7 +18,7 @@ namespace Libreria.Entidades
             }
         }
 
-        public virtual bool Validar()
+        public virtual bool Validar(bool esEditar = false)
         {
             if (!string.IsNullOrWhiteSpace(this._clave) && this._clave.Length <= 5)
             {
@@ -37,7 +31,7 @@ namespace Libreria.Entidades
         private static string GenerarClaveProvisional()
         {
             var random = new Random();
-            return random.Next(1, 10000000).ToString();
+            return random.Next(1, 33333).ToString();
         }
     }
 }

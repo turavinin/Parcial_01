@@ -16,11 +16,13 @@ namespace Libreria.Exceptions
         public ExceptionsInternas(string message, TipoError tipoError) : base(message)
         {
             TipoError = tipoError;
+            Errores = new List<string> { message };
         }
 
         public ExceptionsInternas(string message, TipoError tipoError, Exception innerException) : base(message, innerException)
         {
             TipoError = tipoError;
+            Errores = new List<string> { message };
         }
     }
 }

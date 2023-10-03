@@ -32,6 +32,7 @@
             label1 = new Label();
             btnRegistrarEstudiante = new Button();
             btnGestionarCursos = new Button();
+            btnCerrarAdminEst = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -53,7 +54,7 @@
             label1.Name = "label1";
             label1.Size = new Size(671, 72);
             label1.TabIndex = 1;
-            label1.Text = "ADMINISTRACION ESTUDIANTES";
+            label1.Text = "ADMINISTRACIÓN ESTUDIANTES";
             // 
             // btnRegistrarEstudiante
             // 
@@ -81,18 +82,32 @@
             btnGestionarCursos.UseVisualStyleBackColor = true;
             btnGestionarCursos.Click += btnGestionarCursos_Click;
             // 
+            // btnCerrarAdminEst
+            // 
+            btnCerrarAdminEst.Anchor = AnchorStyles.None;
+            btnCerrarAdminEst.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
+            btnCerrarAdminEst.Location = new Point(225, 375);
+            btnCerrarAdminEst.Name = "btnCerrarAdminEst";
+            btnCerrarAdminEst.Size = new Size(342, 53);
+            btnCerrarAdminEst.TabIndex = 4;
+            btnCerrarAdminEst.Text = "CERRAR";
+            btnCerrarAdminEst.UseMnemonic = false;
+            btnCerrarAdminEst.UseVisualStyleBackColor = true;
+            btnCerrarAdminEst.Click += btnCerrarAdminEst_Click;
+            // 
             // AdministracionEstudiantesForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(787, 450);
+            Controls.Add(btnCerrarAdminEst);
             Controls.Add(btnGestionarCursos);
             Controls.Add(btnRegistrarEstudiante);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "AdministracionEstudiantesForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Administracion de estudiantes";
+            Text = "Administración de estudiantes";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ResumeLayout(false);
@@ -104,5 +119,6 @@
         private Label label1;
         private Button btnRegistrarEstudiante;
         private Button btnGestionarCursos;
+        private Button btnCerrarAdminEst;
     }
 }
