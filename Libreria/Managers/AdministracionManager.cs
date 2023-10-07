@@ -36,22 +36,23 @@ namespace Libreria.Managers
             _emailHelper = new EmailHelper();
         }
 
-        public bool LoginUsuario(string usuario, string clave, bool isAdmin)
-        {
-            if (isAdmin)
-            {
-                return LoginAdministrador(usuario, clave);
-            }
-
-            return LoginEstudiante(usuario, clave);
-        }
-
         #region Estudiante
+        /// <summary>
+        /// Obtiene la información del estudiante.
+        /// </summary>
+        /// <param name="legajo"></param>
+        /// <returns>Al estudiante o null si no existe en la base</returns>
         public Estudiante? GetEstudiante(string legajo)
         {
             return _estudianteRepositorio.Get(legajo);
         }
 
+        /// <summary>
+        /// Registra al estudiante en la base.
+        /// </summary>
+        /// <param name="estudiante"></param>
+        /// <returns>True: si el estudiante fue registrado correctamente.</returns>
+        /// <exception cref="ExceptionsInternas"></exception>
         public bool RegistrarEstudiante(Estudiante estudiante)
         {
             _administrador.AsginarLegajoEstudiante(estudiante);
@@ -69,6 +70,12 @@ namespace Libreria.Managers
             return true;
         } 
 
+        /// <summary>
+        /// Actualiza la clave provisional del estudiante.
+        /// </summary>
+        /// <param name="estudiante"></param>
+        /// <returns>True: si la clave fue modificada correctamente.</returns>
+        /// <exception cref="ExceptionsInternas"></exception>
         public bool ActualizarClaveEstudiante(Estudiante estudiante)
         {
             if (!estudiante.Validar(true))
@@ -82,6 +89,13 @@ namespace Libreria.Managers
             return true;
         }
 
+        /// <summary>
+        /// Inscribe al estudiante a los cursos seleccionados.
+        /// </summary>
+        /// <param name="estudiante"></param>
+        /// <param name="codigosCursos"></param>
+        /// <returns>True: si la inscripción se realizó correctamente.</returns>
+        /// <exception cref="ExceptionsInternas"></exception>
         public bool InscribirCursosAEstudiante(Estudiante estudiante, List<string> codigosCursos)
         {
             var cursos = _cursoRepositorio.Get();
@@ -225,16 +239,31 @@ namespace Libreria.Managers
         #endregion
 
         #region Cursos
+        /// <summary>
+        /// Obtiene el listado de cursos.
+        /// </summary>
+        /// <returns>El listado de cursos o lista vacía.</returns>
         public List<Curso>? GetCursos()
         {
             return _cursoRepositorio.Get();
         } 
 
+        /// <summary>
+        /// Obtiene el curso por su código.
+        /// </summary>
+        /// <param name="codigo"></param>
+        /// <returns>El curso o null si no existe.</returns>
         public Curso? GetCurso(string codigo)
         {
             return _cursoRepositorio.Get(codigo);
         }
 
+        /// <summary>
+        /// Crea un curso.
+        /// </summary>
+        /// <param name="curso"></param>
+        /// <returns>True: si el curso se realizó correctamente.</returns>
+        /// <exception cref="ExceptionsInternas"></exception>
         public bool CrearCurso(Curso curso)
         {
             if (!curso.Validar())
@@ -248,6 +277,13 @@ namespace Libreria.Managers
             return true;
         }
 
+        /// <summary>
+        /// Edita un curso.
+        /// </summary>
+        /// <param name="curso"></param>
+        /// <param name="codigoCursoGuardado"></param>
+        /// <returns>True: si la edición se realizó correctamente.</returns>
+        /// <exception cref="ExceptionsInternas"></exception>
         public bool EditarCurso(Curso curso, string codigoCursoGuardado)
         {
             if (!curso.Validar(true, codigoCursoGuardado))
@@ -260,6 +296,11 @@ namespace Libreria.Managers
             return true;
         }
 
+        /// <summary>
+        /// Elimina el curso.
+        /// </summary>
+        /// <param name="codigo"></param>
+        /// <returns>True: si el curso se eliminó correctamente.</returns>
         public bool EliminarCurso(string codigo)
         {
             _cursoRepositorio.Delete(codigo);
@@ -282,6 +323,11 @@ namespace Libreria.Managers
         #endregion
 
         #region EstudianteCursos
+        /// <summary>
+        /// Obtiene la información del estudiante con sus cursos.
+        /// </summary>
+        /// <param name="legajo"></param>
+        /// <returns>Lista de cursos relacionados al estudiante.</returns>
         public List<EstudianteCurso> Get(string legajo)
         {
             return _estudiantesCursosRepositorio.Get(legajo);
@@ -289,16 +335,32 @@ namespace Libreria.Managers
         #endregion
 
         #region Concepto
+
+        /// <summary>
+        /// Obtiene todos los conceptos cargados en la base.
+        /// </summary>
+        /// <returns>La lista de conceptos o lista vacía.</returns>
         public List<Concepto> GetConceptos()
         {
             return _conceptoRepositorio.Get();
         }
 
+        /// <summary>
+        /// Obtiene la información de los conceptos de un estudiante.
+        /// </summary>
+        /// <param name="legajo"></param>
+        /// <returns>La lista de conceptos del estudiante o vacío.</returns>
         public List<EstudianteConcepto> GetEstudianteConcepto(string legajo)
         {
             return _estudianteConceptoRepositorio.Get(legajo);
         }
 
+        /// <summary>
+        /// Procesa el pago de conceptos seleccionados del estudiante.
+        /// </summary>
+        /// <param name="estudiante"></param>
+        /// <param name="datosPago"></param>
+        /// <param name="conceptoMontoPagado"></param>
         public void ProcesarPago(Estudiante estudiante, DatosPago datosPago, Dictionary<int, string> conceptoMontoPagado)
         {
             ValidarYGestionarPago(datosPago, conceptoMontoPagado);
@@ -339,7 +401,30 @@ namespace Libreria.Managers
         }
         #endregion
 
-        #region Private
+        #region Logins
+        /// <summary>
+        /// Realiza el login del usuario
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <param name="clave"></param>
+        /// <param name="isAdmin"></param>
+        /// <returns>True: si el login es válido.</returns>
+        public bool LoginUsuario(string usuario, string clave, bool isAdmin)
+        {
+            if (isAdmin)
+            {
+                return LoginAdministrador(usuario, clave);
+            }
+
+            return LoginEstudiante(usuario, clave);
+        }
+
+        /// <summary>
+        /// Realiza el login del administrador.
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <param name="clave"></param>
+        /// <returns>True: si el login es valido</returns>
         private bool LoginAdministrador(string usuario, string clave)
         {
             _administrador = _administradorRepositorio.Get(usuario, clave);
@@ -352,6 +437,12 @@ namespace Libreria.Managers
             return true;
         }
 
+        /// <summary>
+        /// Realiza el login del estudiante.
+        /// </summary>
+        /// <param name="legajo"></param>
+        /// <param name="clave"></param>
+        /// <returns>True: si el login es valido</returns>
         private bool LoginEstudiante(string legajo, string clave)
         {
             _estudiante = _estudianteRepositorio.Get(legajo);
