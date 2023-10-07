@@ -28,10 +28,33 @@
             return false;
         }
 
+        public bool ClaveValida(string clave)
+        {
+            var esValida = false;
+
+            try
+            {
+                if (!string.IsNullOrEmpty(clave) && !string.IsNullOrEmpty(this.Clave))
+                {
+                    esValida = BCrypt.Net.BCrypt.EnhancedVerify(clave, this.Clave);
+                }
+            }
+            catch (Exception)
+            {
+                esValida = false;
+            }
+
+            return esValida;
+        }
+
         private static string GenerarClaveProvisional()
         {
-            var random = new Random();
-            return random.Next(1, 33333).ToString();
+            return "clave";
+        }
+
+        public void EncryptClave()
+        {
+            this.Clave = BCrypt.Net.BCrypt.EnhancedHashPassword(this.Clave, 8);
         }
     }
 }

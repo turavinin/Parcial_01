@@ -43,14 +43,16 @@
             // btnCancelarCurso
             // 
             btnCancelarCurso.Anchor = AnchorStyles.None;
+            btnCancelarCurso.BackColor = Color.Black;
             btnCancelarCurso.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
+            btnCancelarCurso.ForeColor = Color.White;
             btnCancelarCurso.Location = new Point(125, 258);
             btnCancelarCurso.Name = "btnCancelarCurso";
             btnCancelarCurso.Size = new Size(342, 45);
             btnCancelarCurso.TabIndex = 40;
             btnCancelarCurso.Text = "CANCELAR";
             btnCancelarCurso.UseMnemonic = false;
-            btnCancelarCurso.UseVisualStyleBackColor = true;
+            btnCancelarCurso.UseVisualStyleBackColor = false;
             btnCancelarCurso.Click += btnCancelarCurso_Click;
             // 
             // btnAceptarCurso
@@ -139,6 +141,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(601, 325);
+            ControlBox = false;
             Controls.Add(lblCodigoCurso);
             Controls.Add(btnCancelarCurso);
             Controls.Add(btnAceptarCurso);
@@ -151,6 +154,7 @@
             Controls.Add(lblNombreCurso);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "CursoOperarForm";
+            ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Curso";
             Load += CursoOperarForm_Load;

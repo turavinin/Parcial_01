@@ -33,12 +33,12 @@
             pnlCursos = new Panel();
             lblHorarios = new Label();
             dgvListaCursosEstudiante = new DataGridView();
-            btnCerrarHorarios = new Button();
             nombreCurso = new DataGridViewTextBoxColumn();
             codigoCurso = new DataGridViewTextBoxColumn();
             Turno = new DataGridViewTextBoxColumn();
             Horario = new DataGridViewTextBoxColumn();
             Aula = new DataGridViewTextBoxColumn();
+            btnCerrarHorarios = new Button();
             pnlCursos.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvListaCursosEstudiante).BeginInit();
             SuspendLayout();
@@ -99,19 +99,6 @@
             dgvListaCursosEstudiante.TabIndex = 9;
             dgvListaCursosEstudiante.TabStop = false;
             // 
-            // btnCerrarHorarios
-            // 
-            btnCerrarHorarios.Anchor = AnchorStyles.None;
-            btnCerrarHorarios.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnCerrarHorarios.Location = new Point(233, 473);
-            btnCerrarHorarios.Name = "btnCerrarHorarios";
-            btnCerrarHorarios.Size = new Size(342, 45);
-            btnCerrarHorarios.TabIndex = 42;
-            btnCerrarHorarios.Text = "CERRAR";
-            btnCerrarHorarios.UseMnemonic = false;
-            btnCerrarHorarios.UseVisualStyleBackColor = true;
-            btnCerrarHorarios.Click += btnCerrarHorarios_Click;
-            // 
             // nombreCurso
             // 
             nombreCurso.Frozen = true;
@@ -158,18 +145,35 @@
             Aula.ReadOnly = true;
             Aula.Width = 125;
             // 
+            // btnCerrarHorarios
+            // 
+            btnCerrarHorarios.Anchor = AnchorStyles.None;
+            btnCerrarHorarios.BackColor = Color.Black;
+            btnCerrarHorarios.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
+            btnCerrarHorarios.ForeColor = Color.White;
+            btnCerrarHorarios.Location = new Point(233, 473);
+            btnCerrarHorarios.Name = "btnCerrarHorarios";
+            btnCerrarHorarios.Size = new Size(342, 45);
+            btnCerrarHorarios.TabIndex = 42;
+            btnCerrarHorarios.Text = "CERRAR";
+            btnCerrarHorarios.UseMnemonic = false;
+            btnCerrarHorarios.UseVisualStyleBackColor = false;
+            btnCerrarHorarios.Click += btnCerrarHorarios_Click;
+            // 
             // HorarioCursosForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(786, 562);
+            ControlBox = false;
             Controls.Add(btnCerrarHorarios);
             Controls.Add(dgvListaCursosEstudiante);
             Controls.Add(pnlCursos);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "HorarioCursosForm";
+            ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "HorarioCursosForm";
+            Text = "Horarios";
             Load += HorarioCursosForm_Load;
             pnlCursos.ResumeLayout(false);
             pnlCursos.PerformLayout();

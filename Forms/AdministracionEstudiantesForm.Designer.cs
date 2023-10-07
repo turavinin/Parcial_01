@@ -60,7 +60,7 @@
             // 
             btnRegistrarEstudiante.Anchor = AnchorStyles.None;
             btnRegistrarEstudiante.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnRegistrarEstudiante.Location = new Point(225, 223);
+            btnRegistrarEstudiante.Location = new Point(225, 236);
             btnRegistrarEstudiante.Name = "btnRegistrarEstudiante";
             btnRegistrarEstudiante.Size = new Size(342, 53);
             btnRegistrarEstudiante.TabIndex = 2;
@@ -73,7 +73,7 @@
             // 
             btnGestionarCursos.Anchor = AnchorStyles.None;
             btnGestionarCursos.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnGestionarCursos.Location = new Point(225, 292);
+            btnGestionarCursos.Location = new Point(225, 305);
             btnGestionarCursos.Name = "btnGestionarCursos";
             btnGestionarCursos.Size = new Size(342, 53);
             btnGestionarCursos.TabIndex = 3;
@@ -85,27 +85,31 @@
             // btnCerrarAdminEst
             // 
             btnCerrarAdminEst.Anchor = AnchorStyles.None;
+            btnCerrarAdminEst.BackColor = Color.Black;
             btnCerrarAdminEst.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnCerrarAdminEst.Location = new Point(225, 375);
+            btnCerrarAdminEst.ForeColor = Color.White;
+            btnCerrarAdminEst.Location = new Point(225, 401);
             btnCerrarAdminEst.Name = "btnCerrarAdminEst";
             btnCerrarAdminEst.Size = new Size(342, 53);
             btnCerrarAdminEst.TabIndex = 4;
             btnCerrarAdminEst.Text = "CERRAR";
             btnCerrarAdminEst.UseMnemonic = false;
-            btnCerrarAdminEst.UseVisualStyleBackColor = true;
+            btnCerrarAdminEst.UseVisualStyleBackColor = false;
             btnCerrarAdminEst.Click += btnCerrarAdminEst_Click;
             // 
             // AdministracionEstudiantesForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(787, 450);
+            ClientSize = new Size(787, 489);
+            ControlBox = false;
             Controls.Add(btnCerrarAdminEst);
             Controls.Add(btnGestionarCursos);
             Controls.Add(btnRegistrarEstudiante);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "AdministracionEstudiantesForm";
+            ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Administración de estudiantes";
             panel1.ResumeLayout(false);

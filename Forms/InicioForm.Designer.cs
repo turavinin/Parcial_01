@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InicioForm));
             panel1 = new Panel();
             label1 = new Label();
             btnIngresoAdmin = new Button();
@@ -90,6 +91,7 @@
             Controls.Add(btnIngresoAdmin);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "InicioForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Sysacad";

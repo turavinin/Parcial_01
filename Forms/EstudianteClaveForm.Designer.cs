@@ -37,14 +37,16 @@
             // btnCancelarNuevaClave
             // 
             btnCancelarNuevaClave.Anchor = AnchorStyles.None;
+            btnCancelarNuevaClave.BackColor = Color.Black;
             btnCancelarNuevaClave.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnCancelarNuevaClave.Location = new Point(18, 186);
+            btnCancelarNuevaClave.ForeColor = Color.White;
+            btnCancelarNuevaClave.Location = new Point(18, 196);
             btnCancelarNuevaClave.Name = "btnCancelarNuevaClave";
             btnCancelarNuevaClave.Size = new Size(275, 45);
             btnCancelarNuevaClave.TabIndex = 50;
             btnCancelarNuevaClave.Text = "CANCELAR";
             btnCancelarNuevaClave.UseMnemonic = false;
-            btnCancelarNuevaClave.UseVisualStyleBackColor = true;
+            btnCancelarNuevaClave.UseVisualStyleBackColor = false;
             btnCancelarNuevaClave.Click += btnCancelarNuevaClave_Click;
             // 
             // btnAceptarNuevaClave
@@ -89,6 +91,7 @@
             Controls.Add(lblNuevaClave);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "EstudianteClaveForm";
+            ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Cambiar clave";
             ResumeLayout(false);

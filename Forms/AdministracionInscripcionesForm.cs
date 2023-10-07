@@ -36,5 +36,11 @@ namespace Forms
         {
             this.Close();
         }
+
+        private void btnRealizarPagos_Click(object sender, EventArgs e)
+        {
+            var form = new ConceptoForm(_administracionManager);
+            form.ShowDialog();
+        }
     }
 }

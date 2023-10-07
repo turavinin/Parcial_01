@@ -155,14 +155,16 @@
             // btnCancelarEstudiante
             // 
             btnCancelarEstudiante.Anchor = AnchorStyles.None;
+            btnCancelarEstudiante.BackColor = Color.Black;
             btnCancelarEstudiante.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
+            btnCancelarEstudiante.ForeColor = Color.White;
             btnCancelarEstudiante.Location = new Point(137, 354);
             btnCancelarEstudiante.Name = "btnCancelarEstudiante";
             btnCancelarEstudiante.Size = new Size(342, 45);
             btnCancelarEstudiante.TabIndex = 25;
             btnCancelarEstudiante.Text = "CANCELAR";
             btnCancelarEstudiante.UseMnemonic = false;
-            btnCancelarEstudiante.UseVisualStyleBackColor = true;
+            btnCancelarEstudiante.UseVisualStyleBackColor = false;
             btnCancelarEstudiante.Click += btnCancelarEstudiante_Click;
             // 
             // RegistroEstudianteForm
@@ -170,6 +172,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(633, 447);
+            ControlBox = false;
             Controls.Add(btnCancelarEstudiante);
             Controls.Add(btnAceptarEstudiante);
             Controls.Add(chkCambiarClave);
@@ -185,6 +188,7 @@
             Controls.Add(lblNombreCompletoEstudiante);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "RegistroEstudianteForm";
+            ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Registro estudiante";
             ResumeLayout(false);

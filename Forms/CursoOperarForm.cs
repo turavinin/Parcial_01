@@ -104,7 +104,7 @@ namespace Forms
         {
             try
             {
-                var curso = new Curso(this.txtNombreCurso.Text, this.txtCodigoCurso.Text, 
+                var curso = new Curso(this.txtNombreCurso.Text, this.txtCodigoCurso.Text,
                                       this.txtDescripcionCurso.Text, int.Parse(this.txtCupoMaximo.Text), 0);
 
                 return _administracionManager.CrearCurso(curso);

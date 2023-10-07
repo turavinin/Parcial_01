@@ -38,6 +38,7 @@
             btnAgregarCurso = new Button();
             btnEditarCurso = new Button();
             btnEliminarCurso = new Button();
+            btnCerrar = new Button();
             pnlCursos.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvListaCursos).BeginInit();
             SuspendLayout();
@@ -123,7 +124,7 @@
             // 
             btnAgregarCurso.Anchor = AnchorStyles.None;
             btnAgregarCurso.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnAgregarCurso.Location = new Point(12, 454);
+            btnAgregarCurso.Location = new Point(12, 455);
             btnAgregarCurso.Name = "btnAgregarCurso";
             btnAgregarCurso.Size = new Size(228, 45);
             btnAgregarCurso.TabIndex = 25;
@@ -136,7 +137,7 @@
             // 
             btnEditarCurso.Anchor = AnchorStyles.None;
             btnEditarCurso.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnEditarCurso.Location = new Point(280, 454);
+            btnEditarCurso.Location = new Point(280, 455);
             btnEditarCurso.Name = "btnEditarCurso";
             btnEditarCurso.Size = new Size(228, 45);
             btnEditarCurso.TabIndex = 26;
@@ -149,7 +150,7 @@
             // 
             btnEliminarCurso.Anchor = AnchorStyles.None;
             btnEliminarCurso.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnEliminarCurso.Location = new Point(545, 454);
+            btnEliminarCurso.Location = new Point(545, 455);
             btnEliminarCurso.Name = "btnEliminarCurso";
             btnEliminarCurso.Size = new Size(228, 45);
             btnEliminarCurso.TabIndex = 27;
@@ -158,11 +159,28 @@
             btnEliminarCurso.UseVisualStyleBackColor = true;
             btnEliminarCurso.Click += btnEliminarCurso_Click;
             // 
+            // btnCerrar
+            // 
+            btnCerrar.Anchor = AnchorStyles.None;
+            btnCerrar.BackColor = Color.Black;
+            btnCerrar.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
+            btnCerrar.ForeColor = Color.White;
+            btnCerrar.Location = new Point(234, 528);
+            btnCerrar.Name = "btnCerrar";
+            btnCerrar.Size = new Size(315, 45);
+            btnCerrar.TabIndex = 28;
+            btnCerrar.Text = "CERRAR";
+            btnCerrar.UseMnemonic = false;
+            btnCerrar.UseVisualStyleBackColor = false;
+            btnCerrar.Click += btnCerrar_Click;
+            // 
             // CursosForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(785, 524);
+            ClientSize = new Size(785, 595);
+            ControlBox = false;
+            Controls.Add(btnCerrar);
             Controls.Add(btnEliminarCurso);
             Controls.Add(btnEditarCurso);
             Controls.Add(btnAgregarCurso);
@@ -170,6 +188,7 @@
             Controls.Add(pnlCursos);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "CursosForm";
+            ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Cursos";
             Load += CursosForm_Load;
@@ -191,5 +210,6 @@
         private Button btnAgregarCurso;
         private Button btnEditarCurso;
         private Button btnEliminarCurso;
+        private Button btnCerrar;
     }
 }

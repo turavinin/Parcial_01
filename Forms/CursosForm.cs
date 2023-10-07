@@ -61,7 +61,7 @@ namespace Forms
                 {
                     var edicionEstudiante = new CursoOperarForm(_administracionManager, codigo);
                     edicionEstudiante.FormClosed += ActualizarAlCerrar;
-                    edicionEstudiante.ShowDialog();                    
+                    edicionEstudiante.ShowDialog();
                 }
             }
             else
@@ -92,6 +92,11 @@ namespace Forms
         private string ObtenerCodigoCursoSeleccionado()
         {
             return this.dgvListaCursos.SelectedRows[0].Cells[COLUMNA_CODIGO].Value.ToString();
+        }
+
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

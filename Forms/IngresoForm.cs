@@ -102,5 +102,16 @@ namespace Forms
 
             return loginValido;
         }
+
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnDefaultAdmin_Click(object sender, EventArgs e)
+        {
+            this.txtUsuario.Text = _esAdmin ? "mari" : "8785";
+            this.txtClave.Text = _esAdmin ? "mari" : "12345";
+        }
     }
 }

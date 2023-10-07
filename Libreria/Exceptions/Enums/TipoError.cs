@@ -8,6 +8,7 @@
         ErrorCrearUsuario,
         ErrorActualizarClaveEstudiante,
         ErrorInscribirCursoAEstudiante,
+        ErrorPago,
         ErrorCrearCurso,
         ErrorEditarCurso
     }

@@ -15,6 +15,8 @@ namespace Libreria.Managers
         private AdministradorRepositorio _administradorRepositorio;
         private CursoRepositorio _cursoRepositorio;
         private EstudianteCursoRepositorio _estudiantesCursosRepositorio;
+        private ConceptoRepositorio _conceptoRepositorio;
+        private EstudianteConceptoRepositorio _estudianteConceptoRepositorio;
 
         private Estudiante _estudiante;
         private Administrador _administrador;
@@ -29,6 +31,8 @@ namespace Libreria.Managers
             _administradorRepositorio = new AdministradorRepositorio();
             _cursoRepositorio = new CursoRepositorio();
             _estudiantesCursosRepositorio = new EstudianteCursoRepositorio();
+            _conceptoRepositorio = new ConceptoRepositorio();
+            _estudianteConceptoRepositorio = new EstudianteConceptoRepositorio();
             _emailHelper = new EmailHelper();
         }
 
@@ -57,6 +61,8 @@ namespace Libreria.Managers
                 throw new ExceptionsInternas(estudiante.ErroresValidacion, TipoError.ErrorCrearUsuario);
             }
 
+            estudiante.EncryptClave();
+
             _estudianteRepositorio.Post(estudiante);
             _emailHelper.EnviarEmail(estudiante.Email, $"Estudiante creado. Legajo: {estudiante.Legajo}");
 
@@ -71,6 +77,7 @@ namespace Libreria.Managers
             }
 
             estudiante.CambiarClave = false;
+            estudiante.EncryptClave();
             _estudianteRepositorio.Update(estudiante);
             return true;
         }
@@ -281,10 +288,61 @@ namespace Libreria.Managers
         }
         #endregion
 
-        #region Private
-        private bool LoginAdministrador(string correo, string clave)
+        #region Concepto
+        public List<Concepto> GetConceptos()
         {
-            _administrador = _administradorRepositorio.Get(correo, clave);
+            return _conceptoRepositorio.Get();
+        }
+
+        public List<EstudianteConcepto> GetEstudianteConcepto(string legajo)
+        {
+            return _estudianteConceptoRepositorio.Get(legajo);
+        }
+
+        public void ProcesarPago(Estudiante estudiante, DatosPago datosPago, Dictionary<int, string> conceptoMontoPagado)
+        {
+            ValidarYGestionarPago(datosPago, conceptoMontoPagado);
+
+            var conceptos = _conceptoRepositorio.Get();
+
+            foreach (var conceptoPagado in conceptoMontoPagado)
+            {
+                var conceptoAPagar = conceptos.FirstOrDefault(x => x.Id == conceptoPagado.Key);
+
+                if(conceptoAPagar != null)
+                {
+                    var conceptosEstudiante = _estudianteConceptoRepositorio.Get(estudiante.Legajo);
+                    var conceptoEstudianteRegistrado = conceptosEstudiante.FirstOrDefault(x => x.IdConcepto == conceptoPagado.Key);
+
+                    if (conceptoEstudianteRegistrado is null)
+                    {
+                        var cancelado = float.Parse(conceptoPagado.Value) == conceptoAPagar.Monto;
+                        conceptoEstudianteRegistrado = new EstudianteConcepto(estudiante.Legajo, conceptoAPagar.Id, float.Parse(conceptoPagado.Value), cancelado);
+                    }
+                    else
+                    {
+                        conceptoEstudianteRegistrado.MontoPagado += float.Parse(conceptoPagado.Value);
+                        conceptoEstudianteRegistrado.Cancelado = conceptoEstudianteRegistrado.MontoPagado == conceptoAPagar.Monto;
+                    }
+
+                    _estudianteConceptoRepositorio.PostOrUpdate(conceptoEstudianteRegistrado);
+                }
+            }
+        }
+
+        private void ValidarYGestionarPago(DatosPago pago, Dictionary<int, string> conceptoMontoPagado)
+        {
+            if (pago.Codigo == 666)
+            {
+                throw new ExceptionsInternas("No se pudo realizar le pago. Intente de nuevo.", TipoError.ErrorPago);
+            }
+        }
+        #endregion
+
+        #region Private
+        private bool LoginAdministrador(string usuario, string clave)
+        {
+            _administrador = _administradorRepositorio.Get(usuario, clave);
 
             if (_administrador == null)
             {
@@ -296,9 +354,9 @@ namespace Libreria.Managers
 
         private bool LoginEstudiante(string legajo, string clave)
         {
-            _estudiante = _estudianteRepositorio.Get(legajo, clave);
+            _estudiante = _estudianteRepositorio.Get(legajo);
 
-            if(_estudiante == null)
+            if(_estudiante == null || !_estudiante.ClaveValida(clave))
             {
                 return false;
             }

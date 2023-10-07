@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             pnlCursos = new Panel();
             lblCursosEstudiante = new Label();
             dgvListaCursosEstudiante = new DataGridView();
@@ -73,25 +73,25 @@
             dgvListaCursosEstudiante.BackgroundColor = SystemColors.ButtonHighlight;
             dgvListaCursosEstudiante.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvListaCursosEstudiante.Columns.AddRange(new DataGridViewColumn[] { Seleccionar, nombreCurso, codigoCurso, descripcionCurso, cupoMaximoCurso });
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Window;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            dgvListaCursosEstudiante.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Window;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle3.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            dgvListaCursosEstudiante.DefaultCellStyle = dataGridViewCellStyle3;
             dgvListaCursosEstudiante.Location = new Point(13, 69);
             dgvListaCursosEstudiante.MultiSelect = false;
             dgvListaCursosEstudiante.Name = "dgvListaCursosEstudiante";
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Control;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = Color.Transparent;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvListaCursosEstudiante.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Control;
+            dataGridViewCellStyle4.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle4.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = Color.Transparent;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
+            dgvListaCursosEstudiante.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             dgvListaCursosEstudiante.RowHeadersVisible = false;
             dgvListaCursosEstudiante.RowHeadersWidth = 51;
             dgvListaCursosEstudiante.RowTemplate.Height = 29;
@@ -153,7 +153,7 @@
             // 
             btnInscribirse.Anchor = AnchorStyles.None;
             btnInscribirse.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnInscribirse.Location = new Point(211, 457);
+            btnInscribirse.Location = new Point(211, 461);
             btnInscribirse.Name = "btnInscribirse";
             btnInscribirse.Size = new Size(342, 45);
             btnInscribirse.TabIndex = 40;
@@ -165,21 +165,23 @@
             // btnCancelarInscripcion
             // 
             btnCancelarInscripcion.Anchor = AnchorStyles.None;
+            btnCancelarInscripcion.BackColor = Color.Black;
             btnCancelarInscripcion.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnCancelarInscripcion.Location = new Point(211, 508);
+            btnCancelarInscripcion.ForeColor = Color.White;
+            btnCancelarInscripcion.Location = new Point(211, 512);
             btnCancelarInscripcion.Name = "btnCancelarInscripcion";
             btnCancelarInscripcion.Size = new Size(342, 45);
             btnCancelarInscripcion.TabIndex = 41;
             btnCancelarInscripcion.Text = "CERRAR";
             btnCancelarInscripcion.UseMnemonic = false;
-            btnCancelarInscripcion.UseVisualStyleBackColor = true;
+            btnCancelarInscripcion.UseVisualStyleBackColor = false;
             btnCancelarInscripcion.Click += btnCancelarInscripcion_Click;
             // 
             // InscripcionCursosForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(782, 570);
+            ClientSize = new Size(770, 588);
             ControlBox = false;
             Controls.Add(btnCancelarInscripcion);
             Controls.Add(btnInscribirse);

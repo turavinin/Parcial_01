@@ -34,17 +34,6 @@ namespace Libreria.Repositorios
             return default;
         }
 
-        public Estudiante? Get(string legajo, string clave)
-        {
-            var estudiantes = Get();
-            if (estudiantes != null && estudiantes.Count > 0)
-            {
-                return estudiantes?.FirstOrDefault(x => x.Legajo == legajo && x.Clave == clave);
-            }
-
-            return default;
-        }
-
         public Estudiante? Get(string legajo)
         {
             var estudiantes = Get();

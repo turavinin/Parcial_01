@@ -29,13 +29,13 @@ namespace Libreria.Repositorios
             return admins;
         }
 
-        public Administrador? Get(string legajo, string clave)
+        public Administrador? Get(string usuario, string clave)
         {
             var admins = Get();
 
             if (admins != null && admins.Count > 0)
             {
-                return admins?.FirstOrDefault(x => x.Usuario == legajo && x.Clave == clave);
+                return admins?.FirstOrDefault(x => x.Usuario == usuario && x.Clave == clave);
             }
 
             return default;

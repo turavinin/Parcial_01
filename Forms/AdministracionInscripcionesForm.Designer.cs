@@ -33,6 +33,7 @@
             btnInscripcionCursos = new Button();
             btnConsultarHorario = new Button();
             btnCerrarAdminInscr = new Button();
+            btnRealizarPagos = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -60,7 +61,7 @@
             // 
             btnInscripcionCursos.Anchor = AnchorStyles.None;
             btnInscripcionCursos.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnInscripcionCursos.Location = new Point(224, 235);
+            btnInscripcionCursos.Location = new Point(224, 232);
             btnInscripcionCursos.Name = "btnInscripcionCursos";
             btnInscripcionCursos.Size = new Size(342, 53);
             btnInscripcionCursos.TabIndex = 3;
@@ -73,7 +74,7 @@
             // 
             btnConsultarHorario.Anchor = AnchorStyles.None;
             btnConsultarHorario.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnConsultarHorario.Location = new Point(224, 304);
+            btnConsultarHorario.Location = new Point(224, 301);
             btnConsultarHorario.Name = "btnConsultarHorario";
             btnConsultarHorario.Size = new Size(342, 53);
             btnConsultarHorario.TabIndex = 4;
@@ -85,27 +86,45 @@
             // btnCerrarAdminInscr
             // 
             btnCerrarAdminInscr.Anchor = AnchorStyles.None;
+            btnCerrarAdminInscr.BackColor = Color.Black;
             btnCerrarAdminInscr.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnCerrarAdminInscr.Location = new Point(224, 385);
+            btnCerrarAdminInscr.ForeColor = Color.White;
+            btnCerrarAdminInscr.Location = new Point(224, 474);
             btnCerrarAdminInscr.Name = "btnCerrarAdminInscr";
             btnCerrarAdminInscr.Size = new Size(342, 53);
             btnCerrarAdminInscr.TabIndex = 5;
             btnCerrarAdminInscr.Text = "CERRAR";
             btnCerrarAdminInscr.UseMnemonic = false;
-            btnCerrarAdminInscr.UseVisualStyleBackColor = true;
+            btnCerrarAdminInscr.UseVisualStyleBackColor = false;
             btnCerrarAdminInscr.Click += btnCerrarAdminInscr_Click;
+            // 
+            // btnRealizarPagos
+            // 
+            btnRealizarPagos.Anchor = AnchorStyles.None;
+            btnRealizarPagos.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
+            btnRealizarPagos.Location = new Point(224, 376);
+            btnRealizarPagos.Name = "btnRealizarPagos";
+            btnRealizarPagos.Size = new Size(342, 53);
+            btnRealizarPagos.TabIndex = 6;
+            btnRealizarPagos.Text = "REALIZAR PAGOS";
+            btnRealizarPagos.UseMnemonic = false;
+            btnRealizarPagos.UseVisualStyleBackColor = true;
+            btnRealizarPagos.Click += btnRealizarPagos_Click;
             // 
             // AdministracionInscripcionesForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(786, 450);
+            ClientSize = new Size(786, 551);
+            ControlBox = false;
+            Controls.Add(btnRealizarPagos);
             Controls.Add(btnCerrarAdminInscr);
             Controls.Add(btnConsultarHorario);
             Controls.Add(btnInscripcionCursos);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "AdministracionInscripcionesForm";
+            ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Administración inscripciones";
             panel1.ResumeLayout(false);
@@ -120,5 +139,6 @@
         private Button btnInscripcionCursos;
         private Button btnConsultarHorario;
         private Button btnCerrarAdminInscr;
+        private Button btnRealizarPagos;
     }
 }
