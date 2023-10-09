@@ -16,6 +16,10 @@ namespace Libreria.Repositorios
             _archivo = new Archivo(_path);
         }
 
+        /// <summary>
+        /// Obtiene los conceptos pagados por los estudiantes.
+        /// </summary>
+        /// <returns></returns>
         public List<EstudianteConcepto> Get()
         {
             var datosJson = _archivo.Leer();
@@ -29,6 +33,11 @@ namespace Libreria.Repositorios
             return data;
         }
 
+        /// <summary>
+        /// Obtiene los conceptos pagados por el estudiante del legajo.
+        /// </summary>
+        /// <param name="legajo"></param>
+        /// <returns></returns>
         public List<EstudianteConcepto> Get(string legajo)
         {
             var data = Get();
@@ -41,18 +50,10 @@ namespace Libreria.Repositorios
             return data;
         }
 
-        public List<EstudianteConcepto> Get(string legajo, bool cancelado)
-        {
-            var data = Get();
-
-            if (data.Count > 0)
-            {
-                return data.Where(x => x.Legajo == legajo && x.Cancelado == cancelado).ToList();
-            }
-
-            return data;
-        }
-
+        /// <summary>
+        /// Crea o guarda un nuevo registro de concepto del estudiante.
+        /// </summary>
+        /// <param name="estudianteConcepto"></param>
         public void PostOrUpdate(EstudianteConcepto estudianteConcepto)
         {
             var estudianteConceptos = Get(estudianteConcepto.Legajo);

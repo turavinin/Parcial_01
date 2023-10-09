@@ -16,6 +16,10 @@ namespace Libreria.Repositorios
             _archivo = new Archivo(_path);
         }
 
+        /// <summary>
+        /// Obtiene la lista de cursos guardados en la base.
+        /// </summary>
+        /// <returns></returns>
         public List<Curso>? Get()
         {
             var dataString = _archivo.Leer();
@@ -29,6 +33,11 @@ namespace Libreria.Repositorios
             return data;
         }
 
+        /// <summary>
+        /// Obtiene curso por su código.
+        /// </summary>
+        /// <param name="codigo"></param>
+        /// <returns></returns>
         public Curso? Get(string codigo)
         {
             var cursos = Get();
@@ -41,6 +50,10 @@ namespace Libreria.Repositorios
             return default;
         }
 
+        /// <summary>
+        /// Guarda un curso nuevo.
+        /// </summary>
+        /// <param name="curso"></param>
         public void Post(Curso curso)
         {
             var cursos = this.Get();
@@ -51,6 +64,11 @@ namespace Libreria.Repositorios
             _archivo.Escribir(cursosJson);
         }
 
+        /// <summary>
+        /// Actualiza un curso.
+        /// </summary>
+        /// <param name="curso"></param>
+        /// <param name="codigoCursoGuardado"></param>
         public void Update(Curso curso, string codigoCursoGuardado)
         {
             var cursos = this.Get();
@@ -69,6 +87,10 @@ namespace Libreria.Repositorios
             _archivo.Escribir(cursosJson);
         }
 
+        /// <summary>
+        /// Elimina un curso.
+        /// </summary>
+        /// <param name="codigo"></param>
         public void Delete(string codigo)
         {
             var cursos = this.Get();

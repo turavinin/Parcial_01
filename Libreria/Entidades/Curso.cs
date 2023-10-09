@@ -42,7 +42,12 @@ namespace Libreria.Entidades
         }
         #endregion
 
-
+        /// <summary>
+        /// Valida el curso a guardar.
+        /// </summary>
+        /// <param name="esEditar"></param>
+        /// <param name="codigoAnterior"></param>
+        /// <returns>True: si el curso es válido</returns>
         public bool Validar(bool esEditar = false, string? codigoAnterior = null)
         {
             _erroresValidacion = new List<string>();
@@ -70,7 +75,7 @@ namespace Libreria.Entidades
             return !_erroresValidacion.Any();
         }
 
-        public void ValidacionesRepositorio(bool esEditar, string codigoAnterior, List<string> errores)
+        private void ValidacionesRepositorio(bool esEditar, string codigoAnterior, List<string> errores)
         {
             var repositorio = new CursoRepositorio();
             var cursos = repositorio.Get();

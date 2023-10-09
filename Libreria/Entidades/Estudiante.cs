@@ -53,6 +53,11 @@ namespace Libreria.Entidades
         }
         #endregion
 
+        /// <summary>
+        /// Valida información del estudiante.
+        /// </summary>
+        /// <param name="esEditar"></param>
+        /// <returns>True: si la información es valida</returns>
         public override bool Validar(bool esEditar = false)
         {
             _erroresValidacion = new List<string>();

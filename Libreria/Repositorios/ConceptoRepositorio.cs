@@ -21,6 +21,10 @@ namespace Libreria.Repositorios
             _archivo = new Archivo(_path);
         }
 
+        /// <summary>
+        /// Obtiene lista de conceptos en la base.
+        /// </summary>
+        /// <returns>Lista de conceptos o lista vacía</returns>
         public List<Concepto> Get()
         {
             var dataJson = _archivo.Leer();

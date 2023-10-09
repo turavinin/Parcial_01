@@ -18,6 +18,12 @@
             }
         }
 
+        /// <summary>
+        /// Valida al usuario
+        /// </summary>
+        /// <param name="esEditar"></param>
+        /// <returns>True: si el usuario es valido.</returns>
+
         public virtual bool Validar(bool esEditar = false)
         {
             if (!string.IsNullOrWhiteSpace(this._clave) && this._clave.Length <= 5)
@@ -28,6 +34,11 @@
             return false;
         }
 
+        /// <summary>
+        /// Valida la clave
+        /// </summary>
+        /// <param name="clave"></param>
+        /// <returns>True: si la clave es válida</returns>
         public bool ClaveValida(string clave)
         {
             var esValida = false;
@@ -52,6 +63,9 @@
             return "clave";
         }
 
+        /// <summary>
+        /// Encrypta la clave del usuario.
+        /// </summary>
         public void EncryptClave()
         {
             this.Clave = BCrypt.Net.BCrypt.EnhancedHashPassword(this.Clave, 8);

@@ -20,6 +20,10 @@
         }
         #endregion
 
+        /// <summary>
+        /// Asigna un legajo random al estudiante.
+        /// </summary>
+        /// <param name="estudiante"></param>
         public void AsginarLegajoEstudiante(Estudiante estudiante)
         {
             estudiante.Legajo = AsignarLegajo();

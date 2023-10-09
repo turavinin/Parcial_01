@@ -20,6 +20,10 @@ namespace Libreria.Repositorios
             _cursoRepositorio = new CursoRepositorio();
         }
 
+        /// <summary>
+        /// Obtiene la lista de estudiante en base.
+        /// </summary>
+        /// <returns></returns>
         public List<Estudiante>? Get()
         {
             var datosEstudiantes = _archivo.Leer();
@@ -34,6 +38,11 @@ namespace Libreria.Repositorios
             return default;
         }
 
+        /// <summary>
+        /// Obtiene a un estudiante.
+        /// </summary>
+        /// <param name="legajo"></param>
+        /// <returns></returns>
         public Estudiante? Get(string legajo)
         {
             var estudiantes = Get();
@@ -45,6 +54,10 @@ namespace Libreria.Repositorios
             return default;
         }
 
+        /// <summary>
+        /// Guarda un estudiante.
+        /// </summary>
+        /// <param name="estudiante"></param>
         public void Post(Estudiante estudiante)
         {
             var estudiantesExistentes = this.Get();
@@ -55,6 +68,10 @@ namespace Libreria.Repositorios
             _archivo.Escribir(estudiantesJson);
         }
 
+        /// <summary>
+        /// Actualzia un estudiante.
+        /// </summary>
+        /// <param name="estudiante"></param>
         public void Update(Estudiante estudiante)
         {
             var estudiantes = this.Get();
@@ -71,6 +88,10 @@ namespace Libreria.Repositorios
             _archivo.Escribir(estudiantesJson);
         }
 
+        /// <summary>
+        /// Relaciona cursos con estudiantes.
+        /// </summary>
+        /// <param name="estudiantes"></param>
         private void RelacionarCursoAEstudiante(List<Estudiante>? estudiantes)
         {
             if (estudiantes.Count > 0)

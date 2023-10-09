@@ -21,6 +21,10 @@ namespace Libreria.Repositorios
             _archivo = new Archivo(_path);
         }
 
+        /// <summary>
+        /// Obtiene una lista de cursos de los estudiantes.
+        /// </summary>
+        /// <returns></returns>
         public List<EstudianteCurso>? Get()
         {
             var datosJson = _archivo.Leer();
@@ -33,6 +37,11 @@ namespace Libreria.Repositorios
             return default;
         }
 
+        /// <summary>
+        /// Obtiene la lista de cursos a los que está inscripto el estudiante.
+        /// </summary>
+        /// <param name="legajo"></param>
+        /// <returns></returns>
         public List<EstudianteCurso>? Get(string legajo)
         {
             var estudiantesCursos = Get();
@@ -45,6 +54,10 @@ namespace Libreria.Repositorios
             return default;
         }
 
+        /// <summary>
+        /// Guarda cursos a los que se inscribió el estudiante.
+        /// </summary>
+        /// <param name="estudiantesCursos"></param>
         public void Post(List<EstudianteCurso> estudiantesCursos)
         {
             var data = this.Get();
@@ -56,6 +69,10 @@ namespace Libreria.Repositorios
             _archivo.Escribir(dataJson);
         }
 
+        /// <summary>
+        /// Guarda un curso al que se inscribió el estudiante.
+        /// </summary>
+        /// <param name="estudianteCurso"></param>
         public void Post(EstudianteCurso estudianteCurso)
         {
             Post(new List<EstudianteCurso>() { estudianteCurso });

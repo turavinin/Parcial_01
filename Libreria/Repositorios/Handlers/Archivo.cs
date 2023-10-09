@@ -12,6 +12,11 @@ namespace Libreria.Repositorios.Handlers
             _path = path;
         }
 
+        /// <summary>
+        /// Lee la información del archivo.
+        /// </summary>
+        /// <returns>La data del archivo</returns>
+        /// <exception cref="ExceptionsInternas"></exception>
         public string Leer()
         {
             try
@@ -31,6 +36,11 @@ namespace Libreria.Repositorios.Handlers
             }
         }
 
+        /// <summary>
+        /// Escribe en el archivo.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <exception cref="ExceptionsInternas"></exception>
         public void Escribir(string data)
         {
             try
@@ -47,6 +57,10 @@ namespace Libreria.Repositorios.Handlers
             }
         }
 
+        /// <summary>
+        /// Obtiene el directorio de la solución.
+        /// </summary>
+        /// <returns></returns>
         public static DirectoryInfo? ObtenerDirectorioSolucion()
         {
             var directory = new DirectoryInfo(Directory.GetCurrentDirectory());

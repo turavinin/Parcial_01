@@ -29,6 +29,12 @@ namespace Libreria.Repositorios
             return admins;
         }
 
+        /// <summary>
+        /// Obtiene al administrador.
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <param name="clave"></param>
+        /// <returns>Al administrador o null.</returns>
         public Administrador? Get(string usuario, string clave)
         {
             var admins = Get();
