@@ -11,16 +11,10 @@ namespace Libreria.Repositorios
 {
     public class CursoRepositorio : ICursoRepositorio
     {
-        private readonly Archivo _archivo;
-        private readonly string _path;
         private readonly string _connectionString;
 
         public CursoRepositorio()
         {
-            var pathSolucion = $"{Archivo.ObtenerDirectorioSolucion()?.FullName}\\Data\\Cursos";
-            _path = Path.Combine(pathSolucion, "cursos.json");
-            _archivo = new Archivo(_path);
-
             _connectionString = Database.ConnectionString;
         }
 
