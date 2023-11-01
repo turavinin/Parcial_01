@@ -1,5 +1,6 @@
 ﻿using Forms.Helpers;
 using Libreria.Managers;
+using Libreria.Managers.Interface;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,19 +15,28 @@ namespace Forms
 {
     public partial class IngresoForm : Form
     {
+        private IEstudianteManager _estudianteManager;
+
+
         private AdministracionManager _administracionManager;
         private bool _esAdmin;
         private bool _ingresoCorrecto;
+        private string _estudianteLegajo;
 
         #region Propiedades
         public bool IngresoCorrecto { get => _ingresoCorrecto; set => _ingresoCorrecto = value; }
+        public string EstudianteLegajo { get => _estudianteLegajo; set => _estudianteLegajo = value; }
         #endregion
 
         public IngresoForm(AdministracionManager administracionManager, bool esAdmin)
         {
+            _estudianteManager = new EstudianteManager();
+
+
             _administracionManager = administracionManager;
             _esAdmin = esAdmin;
             _ingresoCorrecto = false;
+
             InitializeComponent();
         }
 
@@ -92,7 +102,6 @@ namespace Forms
         {
             var usuario = this.txtUsuario.Text;
             var clave = this.txtClave.Text;
-
             var loginValido = _administracionManager.LoginUsuario(usuario, clave, _esAdmin);
 
             if (!loginValido)
@@ -100,18 +109,23 @@ namespace Forms
                 MensajesHelper.Errores.Add($"Error al ingresar.");
             }
 
+            if(!_esAdmin)
+            {
+                this.EstudianteLegajo = usuario;
+            }
+
             return loginValido;
+        }
+
+        private void btnDefaultAdmin_Click(object sender, EventArgs e)
+        {
+            this.txtUsuario.Text = _esAdmin ? "admin" : "8785";
+            this.txtClave.Text = _esAdmin ? "admin" : "12345";
         }
 
         private void btnCerrar_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private void btnDefaultAdmin_Click(object sender, EventArgs e)
-        {
-            this.txtUsuario.Text = _esAdmin ? "mari" : "8785";
-            this.txtClave.Text = _esAdmin ? "mari" : "12345";
         }
     }
 }

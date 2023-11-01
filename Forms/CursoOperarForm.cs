@@ -1,31 +1,25 @@
 ﻿using Forms.Helpers;
 using Libreria.Entidades;
-using Libreria.Exceptions.Enums;
 using Libreria.Exceptions;
+using Libreria.Exceptions.Enums;
 using Libreria.Managers;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using Libreria.Managers.Interface;
 
 namespace Forms
 {
     public partial class CursoOperarForm : Form
     {
-        private AdministracionManager _administracionManager;
         private bool _esCrear;
-        private string _codigo;
+        private int? _idCurso;
 
-        public CursoOperarForm(AdministracionManager administracionManager, string? codigo = null)
+        private ICursoManager _cursoManager;
+
+        public CursoOperarForm(int? idCurso = null)
         {
-            _administracionManager = administracionManager;
-            _esCrear = codigo is null;
-            _codigo = codigo;
+            _esCrear = idCurso is null;
+            _idCurso = idCurso;
+
+            _cursoManager = new CursoManager();
 
             InitializeComponent();
         }
@@ -34,7 +28,7 @@ namespace Forms
         {
             this.Text = _esCrear ? "Crear curso" : "Editar curso";
 
-            if (!_esCrear && !string.IsNullOrEmpty(_codigo))
+            if (!_esCrear && _idCurso != null)
             {
                 IniciarFormCursoExistente();
             }
@@ -102,12 +96,14 @@ namespace Forms
 
         private bool CrearCurso()
         {
+            var creadoConExito = true;
+
             try
             {
                 var curso = new Curso(this.txtNombreCurso.Text, this.txtCodigoCurso.Text,
-                                      this.txtDescripcionCurso.Text, int.Parse(this.txtCupoMaximo.Text), 0);
+                                      this.txtDescripcionCurso.Text, int.Parse(this.txtCupoMaximo.Text));
 
-                return _administracionManager.CrearCurso(curso);
+                _cursoManager.Crear(curso);
             }
             catch (Exception ex)
             {
@@ -118,18 +114,31 @@ namespace Forms
                     MensajesHelper.Errores = exInterna.Errores;
                 }
 
-                return false;
+                creadoConExito = false;
             }
+
+            return creadoConExito;
         }
 
         private bool EditarCurso()
         {
+            var edicionExitosa = true;
+
             try
             {
-                var curso = new Curso(this.txtNombreCurso.Text, this.txtCodigoCurso.Text,
-                                      this.txtDescripcionCurso.Text, int.Parse(this.txtCupoMaximo.Text));
+                var cursoExistente = _cursoManager.Get((int)_idCurso);
 
-                return _administracionManager.EditarCurso(curso, _codigo);
+                if(cursoExistente == null)
+                {
+                    return false;
+                }
+
+                cursoExistente.Nombre = this.txtNombreCurso.Text;
+                cursoExistente.Codigo = this.txtCodigoCurso.Text;
+                cursoExistente.Descripcion = this.txtDescripcionCurso.Text;
+                cursoExistente.Cupo = int.Parse(this.txtCupoMaximo.Text);
+
+                _cursoManager.Editar(cursoExistente);
             }
             catch (Exception ex)
             {
@@ -140,20 +149,22 @@ namespace Forms
                     MensajesHelper.Errores = exInterna.Errores;
                 }
 
-                return false;
+                edicionExitosa = false;
             }
+
+            return edicionExitosa;
         }
 
         private void IniciarFormCursoExistente()
         {
-            var curso = _administracionManager.GetCurso(_codigo);
+            var curso = _cursoManager.Get((int)_idCurso);
 
             if (curso != null)
             {
                 this.txtNombreCurso.Text = curso.Nombre;
                 this.txtDescripcionCurso.Text = curso.Descripcion;
                 this.txtCodigoCurso.Text = curso.Codigo;
-                this.txtCupoMaximo.Text = curso.CupoMaximo.ToString();
+                this.txtCupoMaximo.Text = curso.Cupo.ToString();
             }
         }
     }

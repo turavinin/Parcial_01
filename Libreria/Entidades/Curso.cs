@@ -1,53 +1,45 @@
 ﻿using Libreria.Repositorios;
-using Newtonsoft.Json;
 
 namespace Libreria.Entidades
 {
     public class Curso
     {
         #region Atributos
+        private int _id;
         private string? _nombre;
         private string? _codigo;
         private string? _descripcion;
-        private int? _cupoMaximo;
-        private int? _aula;
-
+        private int? _cupo;
+        private List<Inscripcion> _inscripciones;
         private List<string> _erroresValidacion;
         #endregion
 
         #region Propiedades
+        public int Id { get => _id; set => _id = value; }
         public string? Nombre { get => _nombre; set => _nombre = value; }
         public string? Codigo { get => _codigo; set => _codigo = value; }
         public string? Descripcion { get => _descripcion; set => _descripcion = value; }
-        public int? CupoMaximo { get => _cupoMaximo; set => _cupoMaximo = value; }
-        public int? Aula { get => _aula; set => _aula = value; }
+        public int? Cupo { get => _cupo; set => _cupo = value; }
+        public List<Inscripcion> Inscripciones { get => _inscripciones; set => _inscripciones = value; }
 
-        [JsonIgnore]
         public List<string> ErroresValidacion { get => _erroresValidacion; }
         #endregion
 
         #region Constructores
+        public Curso()
+        {
+            
+        }
+
         public Curso(string nombre, string codigo, string descripcion, int cupoMaximo)
         {
             this.Nombre = nombre;
             this.Codigo = codigo;
             this.Descripcion = descripcion;
-            this.CupoMaximo = cupoMaximo;
-        }
-
-        [JsonConstructor]
-        public Curso(string nombre, string codigo, string descripcion, int cupoMaximo, int? aula) : this(nombre, codigo, descripcion, cupoMaximo)
-        {
-            this.Aula = aula;
+            this.Cupo = cupoMaximo;
         }
         #endregion
 
-        /// <summary>
-        /// Valida el curso a guardar.
-        /// </summary>
-        /// <param name="esEditar"></param>
-        /// <param name="codigoAnterior"></param>
-        /// <returns>True: si el curso es válido</returns>
         public bool Validar(bool esEditar = false, string? codigoAnterior = null)
         {
             _erroresValidacion = new List<string>();
@@ -62,7 +54,7 @@ namespace Libreria.Entidades
                 _erroresValidacion.Add("La descripción no puede estar vacía.");
             }
 
-            if (this.CupoMaximo <= 0)
+            if (this.Cupo <= 0)
             {
                 _erroresValidacion.Add("El cupo máximo debe ser mayor a 0.");
             }

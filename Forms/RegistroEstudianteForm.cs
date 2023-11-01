@@ -3,6 +3,7 @@ using Libreria.Entidades;
 using Libreria.Exceptions;
 using Libreria.Exceptions.Enums;
 using Libreria.Managers;
+using Libreria.Managers.Interface;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,11 +18,12 @@ namespace Forms
 {
     public partial class RegistroEstudianteForm : Form
     {
-        private AdministracionManager _administracionManager;
+        private IEstudianteManager _estudianteManager;
 
-        public RegistroEstudianteForm(AdministracionManager administracionManager)
+        public RegistroEstudianteForm()
         {
-            _administracionManager = administracionManager;
+            _estudianteManager = new EstudianteManager();
+
             InitializeComponent();
         }
 
@@ -85,13 +87,15 @@ namespace Forms
 
         private bool RegistrarEstudiante()
         {
+            var esValido = true;
+
             try
             {
                 var estudiante = new Estudiante(this.txtNombreCompletoEstudiante.Text, this.txtDireccionEstudiante.Text,
                                  this.txtDniEstudiante.Text, this.txtTelefonoEstudiante.Text,
                                  this.txtEmailEstudiante.Text, this.chkCambiarClave.Checked, true);
 
-                return _administracionManager.RegistrarEstudiante(estudiante);
+                _estudianteManager.Crear(estudiante);
             }
             catch (Exception ex)
             {
@@ -102,8 +106,10 @@ namespace Forms
                     MensajesHelper.Errores = exInterna.Errores;
                 }
 
-                return false;
+                esValido = false;
             }
+
+            return esValido;
         }
     }
 }

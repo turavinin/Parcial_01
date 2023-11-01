@@ -1,106 +1,103 @@
-﻿using Libreria.Entidades;
+﻿using Dapper;
+using Libreria.Entidades;
+using Libreria.Entidades.Enums;
 using Libreria.Repositorios.Handlers;
+using Libreria.Repositorios.Interface;
 using Newtonsoft.Json;
+using System.Data.SqlClient;
+using System.Text;
 
 namespace Libreria.Repositorios
 {
-    public class CursoRepositorio
+    public class CursoRepositorio : ICursoRepositorio
     {
         private readonly Archivo _archivo;
         private readonly string _path;
+        private readonly string _connectionString;
 
         public CursoRepositorio()
         {
             var pathSolucion = $"{Archivo.ObtenerDirectorioSolucion()?.FullName}\\Data\\Cursos";
             _path = Path.Combine(pathSolucion, "cursos.json");
             _archivo = new Archivo(_path);
+
+            _connectionString = Database.ConnectionString;
         }
 
-        /// <summary>
-        /// Obtiene la lista de cursos guardados en la base.
-        /// </summary>
-        /// <returns></returns>
-        public List<Curso>? Get()
+        public List<Curso> Get(int? id = null)
         {
-            var dataString = _archivo.Leer();
-            var data = new List<Curso>();
+            var sql = new StringBuilder();
+            var parameters = new DynamicParameters();
 
-            if (!string.IsNullOrEmpty(dataString))
+            sql.AppendLine("SELECT");
+            sql.AppendLine("  C.Id AS Id");
+            sql.AppendLine(" ,C.Nombre AS Nombre");
+            sql.AppendLine(" ,C.Codigo AS Codigo");
+            sql.AppendLine(" ,C.Descripcion AS Descripcion");
+            sql.AppendLine(" ,C.Cupo AS Cupo");
+            sql.AppendLine("FROM Curso C");
+
+
+            if (id != null)
             {
-                data = JsonConvert.DeserializeObject<List<Curso>>(dataString);
+                sql.AppendLine("WHERE C.Id = @Id");
+                parameters.Add("Id", id);
             }
 
-            return data;
+            using var connection = new SqlConnection(_connectionString);
+            return connection.Query<Curso>(sql.ToString(), parameters).AsList();
         }
 
-        /// <summary>
-        /// Obtiene curso por su código.
-        /// </summary>
-        /// <param name="codigo"></param>
-        /// <returns></returns>
-        public Curso? Get(string codigo)
-        {
-            var cursos = Get();
-
-            if (cursos.Any())
-            {
-                return cursos?.FirstOrDefault(x => string.Equals(x.Codigo, codigo, StringComparison.OrdinalIgnoreCase));
-            }
-
-            return default;
-        }
-
-        /// <summary>
-        /// Guarda un curso nuevo.
-        /// </summary>
-        /// <param name="curso"></param>
         public void Post(Curso curso)
         {
-            var cursos = this.Get();
-            cursos ??= new List<Curso>();
+            var sql = new StringBuilder();
+            sql.AppendLine("INSERT INTO Curso");
+            sql.AppendLine("(Nombre, Codigo, Descripcion, Cupo)");
+            sql.AppendLine("VALUES");
+            sql.AppendLine("(@Nombre, @Codigo, @Descripcion, @Cupo)");
 
-            cursos.Add(curso);
-            var cursosJson = JsonConvert.SerializeObject(cursos);
-            _archivo.Escribir(cursosJson);
+            var parameters = new DynamicParameters();
+            parameters.Add("Nombre", curso.Nombre);
+            parameters.Add("Codigo", curso.Codigo);
+            parameters.Add("Descripcion", curso.Descripcion);
+            parameters.Add("Cupo", curso.Cupo);
+
+            using var connection = new SqlConnection(_connectionString);
+            connection.Execute(sql.ToString(), parameters);
         }
 
-        /// <summary>
-        /// Actualiza un curso.
-        /// </summary>
-        /// <param name="curso"></param>
-        /// <param name="codigoCursoGuardado"></param>
-        public void Update(Curso curso, string codigoCursoGuardado)
+        public void Update(Curso curso)
         {
-            var cursos = this.Get();
-            cursos ??= new List<Curso>();
-            var cursoExistente = cursos?.FirstOrDefault(x => string.Equals(x.Codigo, codigoCursoGuardado, StringComparison.OrdinalIgnoreCase));
+            var sql = new StringBuilder();
+            sql.AppendLine("UPDATE Curso SET");
+            sql.AppendLine("Nombre = @Nombre");
+            sql.AppendLine(",Codigo = @Codigo");
+            sql.AppendLine(",Descripcion = @Descripcion");
+            sql.AppendLine(",Cupo = @Cupo");
+            sql.AppendLine("WHERE Id = @Id");
 
-            if (cursoExistente != null)
-            {
-                cursoExistente.Codigo = curso.Codigo;
-                cursoExistente.Nombre = curso.Nombre;
-                cursoExistente.Descripcion = curso.Descripcion;
-                cursoExistente.CupoMaximo = curso.CupoMaximo;
-            }
+            var parameters = new DynamicParameters();
+            parameters.Add("Nombre", curso.Nombre);
+            parameters.Add("Codigo", curso.Codigo);
+            parameters.Add("Descripcion", curso.Descripcion);
+            parameters.Add("Cupo", curso.Cupo);
+            parameters.Add("Id", curso.Id);
 
-            var cursosJson = JsonConvert.SerializeObject(cursos);
-            _archivo.Escribir(cursosJson);
+            using var connection = new SqlConnection(_connectionString);
+            connection.Execute(sql.ToString(), parameters);
         }
 
-        /// <summary>
-        /// Elimina un curso.
-        /// </summary>
-        /// <param name="codigo"></param>
-        public void Delete(string codigo)
+        public void Delete(int id)
         {
-            var cursos = this.Get();
+            var sql = new StringBuilder();
+            sql.AppendLine("DELETE FROM Curso");
+            sql.AppendLine("WHERE Id = @Id");
 
-            if(cursos != null && cursos.Count > 0) 
-            {
-                cursos.RemoveAll(x => x.Codigo == codigo);
-                var cursosJson = JsonConvert.SerializeObject(cursos);
-                _archivo.Escribir(cursosJson);
-            }
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", id);
+
+            using var connection = new SqlConnection(_connectionString);
+            connection.Execute(sql.ToString(), parameters);
         }
     }
 }

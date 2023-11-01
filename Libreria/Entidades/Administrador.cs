@@ -3,37 +3,24 @@
     public class Administrador : Usuario
     {
         #region Atributos
-        private string? _nombreCompleto;
+        private string? _nombre;
         private string? _usuario;
         #endregion
 
         #region Propiedades
-        public string? NombreCompleto { get => _nombreCompleto; set => _nombreCompleto = value; }
+        public string? Nombre { get => _nombre; set => _nombre = value; }
         public string? Usuario { get => _usuario; set => _usuario = value; }
         #endregion
 
         #region Constructores
-        public Administrador(string nombreCompleto, string usuario, string clave) : base(clave)
+        public Administrador()
         {
-            this.NombreCompleto = nombreCompleto;
+            
+        }
+        public Administrador(string nombre, string usuario, string clave) : base(clave)
+        {
+            this.Nombre = nombre;
             this.Usuario = usuario;
-        }
-        #endregion
-
-        /// <summary>
-        /// Asigna un legajo random al estudiante.
-        /// </summary>
-        /// <param name="estudiante"></param>
-        public void AsginarLegajoEstudiante(Estudiante estudiante)
-        {
-            estudiante.Legajo = AsignarLegajo();
-        }
-
-        #region Privados
-        private static string AsignarLegajo()
-        {
-            var random = new Random();
-            return random.Next(1, 10000).ToString();
         }
         #endregion
     }

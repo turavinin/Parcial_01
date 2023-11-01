@@ -12,16 +12,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Libreria.Managers.Interface;
 
 namespace Forms
 {
-    public partial class EstudianteClaveForm : Form
+    public partial class CambioClaveForm : Form
     {
-        private AdministracionManager _administracionManager;
+        private IEstudianteManager _estudianteManager;
+        private Estudiante _estudiante;
 
-        public EstudianteClaveForm(AdministracionManager administracionManager)
+        public CambioClaveForm(Estudiante estudiante)
         {
-            _administracionManager = administracionManager;
+            _estudiante = estudiante;
+            _estudianteManager = new EstudianteManager();
+
             InitializeComponent();
         }
 
@@ -68,10 +72,12 @@ namespace Forms
 
         private bool ActualzarClave()
         {
+            var actualizacionCorrecta = true;
+
             try
             {
-                _administracionManager.Estudiante.Clave = this.txtNuevaClave.Text;
-                return _administracionManager.ActualizarClaveEstudiante(_administracionManager.Estudiante);
+                _estudiante.Clave = this.txtNuevaClave.Text;
+                _estudianteManager.ActualizarClave(_estudiante);
             }
             catch (Exception ex)
             {
@@ -82,8 +88,10 @@ namespace Forms
                     MensajesHelper.Errores = exInterna.Errores;
                 }
 
-                return false;
+                actualizacionCorrecta = false;
             }
+
+            return actualizacionCorrecta;
         }
     }
 }

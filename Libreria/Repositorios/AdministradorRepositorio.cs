@@ -1,50 +1,52 @@
-﻿using Libreria.Entidades;
+﻿using Dapper;
+using Libreria.Entidades;
 using Libreria.Repositorios.Handlers;
-using Newtonsoft.Json;
+using Libreria.Repositorios.Interface;
+using System.Data.SqlClient;
+using System.Text;
 
 namespace Libreria.Repositorios
 {
-    public class AdministradorRepositorio
+    public class AdministradorRepositorio : IAdministradorRepositorio
     {
-        private readonly Archivo _archivo;
-        private readonly string _path;
+        private readonly string _connectionString;
 
         public AdministradorRepositorio()
         {
-            var pathSolucion = $"{Archivo.ObtenerDirectorioSolucion()?.FullName}\\Data\\Administradores";
-            _path = Path.Combine(pathSolucion, "administradores.json");
-            _archivo = new Archivo(_path);
+            _connectionString = Database.ConnectionString;
         }
 
-        public List<Administrador>? Get()
+        public List<Administrador> Get()
         {
-            var datoAdmins = _archivo.Leer();
-            var admins = new List<Administrador>();
+            var sql = new StringBuilder();
+            sql.AppendLine("SELECT");
+            sql.AppendLine("  A.Id AS Id");
+            sql.AppendLine(" ,A.Nombre AS Nombre");
+            sql.AppendLine(" ,A.Usuario AS Usuario");
+            sql.AppendLine(" ,A.Clave AS Clave");
+            sql.AppendLine("FROM Administrador A");
 
-            if (!string.IsNullOrEmpty(datoAdmins))
-            {
-                admins = JsonConvert.DeserializeObject<List<Administrador>>(datoAdmins);
-            }
-
-            return admins;
+            using var connection = new SqlConnection(_connectionString);
+            return connection.Query<Administrador>(sql.ToString()).AsList();
         }
 
-        /// <summary>
-        /// Obtiene al administrador.
-        /// </summary>
-        /// <param name="usuario"></param>
-        /// <param name="clave"></param>
-        /// <returns>Al administrador o null.</returns>
-        public Administrador? Get(string usuario, string clave)
+        public Administrador Get(string usuario, string clave)
         {
-            var admins = Get();
+            var sql = new StringBuilder();
+            sql.AppendLine("SELECT");
+            sql.AppendLine("  A.Id AS Id");
+            sql.AppendLine(" ,A.Nombre AS Nombre");
+            sql.AppendLine(" ,A.Usuario AS Usuario");
+            sql.AppendLine(" ,A.Clave AS Clave");
+            sql.AppendLine("FROM Administrador A");
+            sql.AppendLine("WHERE A.Usuario = @Usuario AND A.Clave = @Clave");
 
-            if (admins != null && admins.Count > 0)
-            {
-                return admins?.FirstOrDefault(x => x.Usuario == usuario && x.Clave == clave);
-            }
+            var parameters = new DynamicParameters();
+            parameters.Add("Usuario", usuario);
+            parameters.Add("Clave", clave);
 
-            return default;
+            using var connection = new SqlConnection(_connectionString);
+            return connection.Query<Administrador>(sql.ToString(), parameters).FirstOrDefault();
         }
     }
 }

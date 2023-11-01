@@ -15,18 +15,17 @@ using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class DatosPagoForm : Form
+    public partial class PagoForm : Form
     {
-        private AdministracionManager _administracionManager;
         private Dictionary<int, string> _conceptosMontos;
-        private DatosPago _pago;
+        private Pago _pago;
 
-        public DatosPago Pago { get => _pago; set => _pago = value; }
+        public Pago Pago { get => _pago; set => _pago = value; }
 
-        public DatosPagoForm(AdministracionManager administracionManager, Dictionary<int, string> conceptosMontos)
+        public PagoForm(Dictionary<int, string> conceptosMontos)
         {
-            _administracionManager = administracionManager;
             _conceptosMontos = conceptosMontos;
+
             InitializeComponent();
         }
 
@@ -75,7 +74,7 @@ namespace Forms
                 var numero = BigInteger.Parse(this.txtNumero.Text);
                 var codigo = tipoPago == TipoMetodoPago.Deposito ? 0 : int.Parse(this.txtCodigo.Text);
 
-                _pago = new DatosPago(tipoPago, numero, codigo);
+                _pago = new Pago(numero, codigo, tipoPago);
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }

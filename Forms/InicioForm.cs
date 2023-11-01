@@ -1,4 +1,5 @@
 ﻿using Libreria.Managers;
+using Libreria.Managers.Interface;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,9 +14,11 @@ namespace Forms
 {
     public partial class InicioForm : Form
     {
+        private IEstudianteManager _estudianteManager;
         private AdministracionManager _administracionManager;
         public InicioForm()
         {
+            _estudianteManager = new EstudianteManager();
             _administracionManager = new AdministracionManager();
             InitializeComponent();
         }
@@ -39,35 +42,37 @@ namespace Forms
             {
                 if (esAdmin)
                 {
-                    IniciarAdministracionEstudiantes();
+                    IniciarPanelAdministrador();
                 }
                 else
                 {
-                    IniciarAdministracionInscripciones();
+                    IniciarPanelEstudiante(ingresoFrom.EstudianteLegajo);
                 }
             }
         }
 
-        private void IniciarAdministracionEstudiantes()
+        private void IniciarPanelAdministrador()
         {
-            var adminEstudiantes = new AdministracionEstudiantesForm(_administracionManager);
-            var result = adminEstudiantes.ShowDialog();
+            var adminEstudiantes = new PanelAdministradorForm();
+            adminEstudiantes.ShowDialog();
         }
 
-        private void IniciarAdministracionInscripciones()
+        private void IniciarPanelEstudiante(string legajo)
         {
             DialogResult formNuevaClaveResult = DialogResult.None;
 
-            if (_administracionManager.Estudiante.CambiarClave == true)
+            var estudiante = _estudianteManager.Get(legajo: legajo);
+
+            if (estudiante.CambiarClave == true)
             {
-                var formNuevaClave = new EstudianteClaveForm(_administracionManager);
-                formNuevaClaveResult = formNuevaClave.ShowDialog();
+                var cambioClaveForm = new CambioClaveForm(estudiante);
+                formNuevaClaveResult = cambioClaveForm.ShowDialog();
             }
 
             if (formNuevaClaveResult != DialogResult.Cancel)
             {
-                var adminInscripciones = new AdministracionInscripcionesForm(_administracionManager);
-                var result = adminInscripciones.ShowDialog();
+                var panelEstudianteForm = new PanelEstudianteForm(estudiante.Id);
+                panelEstudianteForm.ShowDialog();
             }
         }
     }

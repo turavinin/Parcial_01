@@ -1,5 +1,7 @@
 ﻿using Forms.Helpers;
+using Libreria.Entidades;
 using Libreria.Managers;
+using Libreria.Managers.Interface;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,11 +17,16 @@ namespace Forms
     public partial class CursosForm : Form
     {
         private const int COLUMNA_CODIGO = 1;
-        private AdministracionManager _administracionManager;
+        private List<Curso> _cursos;
 
-        public CursosForm(AdministracionManager administracionManager)
+        private ICursoManager _cursoManager;
+
+
+        public CursosForm()
         {
-            _administracionManager = administracionManager;
+            _cursos = new List<Curso>();
+            _cursoManager = new CursoManager();
+
             InitializeComponent();
         }
 
@@ -30,12 +37,12 @@ namespace Forms
 
         private void ListarCursos()
         {
-            var cursos = _administracionManager.GetCursos();
+            _cursos = _cursoManager.Get();
 
-            if (cursos != null && cursos.Any())
+            if (_cursos != null && _cursos.Any())
             {
                 this.dgvListaCursos.Rows.Clear();
-                cursos.ForEach(x => this.dgvListaCursos.Rows.Add(x.Nombre, x.Codigo, x.Descripcion, x.CupoMaximo));
+                _cursos.ForEach(x => this.dgvListaCursos.Rows.Add(x.Nombre, x.Codigo, x.Descripcion, x.Cupo));
             }
         }
 
@@ -46,7 +53,7 @@ namespace Forms
 
         private void btnAgregarCurso_Click(object sender, EventArgs e)
         {
-            var registroEstudiantes = new CursoOperarForm(_administracionManager);
+            var registroEstudiantes = new CursoOperarForm();
             registroEstudiantes.FormClosed += ActualizarAlCerrar;
             registroEstudiantes.ShowDialog();
         }
@@ -55,11 +62,11 @@ namespace Forms
         {
             if (this.dgvListaCursos.SelectedRows.Count > 0)
             {
-                var codigo = this.ObtenerCodigoCursoSeleccionado();
+                var idCurso = this.ObtenerIdCurso();
 
-                if (!string.IsNullOrEmpty(codigo))
+                if (idCurso != null)
                 {
-                    var edicionEstudiante = new CursoOperarForm(_administracionManager, codigo);
+                    var edicionEstudiante = new CursoOperarForm(idCurso);
                     edicionEstudiante.FormClosed += ActualizarAlCerrar;
                     edicionEstudiante.ShowDialog();
                 }
@@ -74,11 +81,11 @@ namespace Forms
         {
             if (this.dgvListaCursos.SelectedRows.Count > 0)
             {
-                var codigo = this.ObtenerCodigoCursoSeleccionado();
+                var idCurso = this.ObtenerIdCurso();
 
-                if (!string.IsNullOrEmpty(codigo))
+                if (idCurso != null)
                 {
-                    _administracionManager.EliminarCurso(codigo);
+                    _cursoManager.Eliminar((int)idCurso);
                     MensajesHelper.MensajeAceptar("Curso eliminado con éxito.");
                     ListarCursos();
                 }
@@ -89,9 +96,10 @@ namespace Forms
             }
         }
 
-        private string ObtenerCodigoCursoSeleccionado()
+        private int? ObtenerIdCurso()
         {
-            return this.dgvListaCursos.SelectedRows[0].Cells[COLUMNA_CODIGO].Value.ToString();
+            var codigo = this.dgvListaCursos.SelectedRows[0].Cells[COLUMNA_CODIGO].Value.ToString();
+            return _cursos.FirstOrDefault(x => x.Codigo == codigo)?.Id;
         }
 
         private void btnCerrar_Click(object sender, EventArgs e)

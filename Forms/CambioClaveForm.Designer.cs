@@ -1,6 +1,6 @@
 ﻿namespace Forms
 {
-    partial class EstudianteClaveForm
+    partial class CambioClaveForm
     {
         /// <summary>
         /// Required designer variable.

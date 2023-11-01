@@ -1,6 +1,6 @@
 ﻿namespace Forms
 {
-    partial class AdministracionInscripcionesForm
+    partial class PanelEstudianteForm
     {
         /// <summary>
         /// Required designer variable.

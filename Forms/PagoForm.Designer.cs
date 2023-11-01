@@ -1,6 +1,6 @@
 ﻿namespace Forms
 {
-    partial class DatosPagoForm
+    partial class PagoForm
     {
         /// <summary>
         /// Required designer variable.
