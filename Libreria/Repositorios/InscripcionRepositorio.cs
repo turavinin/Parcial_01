@@ -21,9 +21,9 @@ namespace Libreria.Repositorios
         {
             var sql = new StringBuilder();
             sql.AppendLine("INSERT INTO Inscripcion");
-            sql.AppendLine("(EstudianteId, CursoId, Turno, Aula, Dia)");
+            sql.AppendLine("(EstudianteId, CursoId, Turno, Aula, Dia, Anio, Cuatrimestre)");
             sql.AppendLine("VALUES");
-            sql.AppendLine("(@EstudianteId, @CursoId, @Turno, @Aula, @Dia)");
+            sql.AppendLine("(@EstudianteId, @CursoId, @Turno, @Aula, @Dia, @Anio, @Cuatrimestre)");
 
             var parameters = new DynamicParameters();
             parameters.Add("EstudianteId", estudianteId);
@@ -31,6 +31,8 @@ namespace Libreria.Repositorios
             parameters.Add("Turno", (int)inscrpcion.Turno);
             parameters.Add("Aula", (int)inscrpcion.Aula);
             parameters.Add("Dia", (int)inscrpcion.Dia);
+            parameters.Add("Anio", (int)inscrpcion.Anio);
+            parameters.Add("Cuatrimestre", (int)inscrpcion.Cuatrimestre);
 
             using var connection = new SqlConnection(_connectionString);
             connection.Execute(sql.ToString(), parameters);

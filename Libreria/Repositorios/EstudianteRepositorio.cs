@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Libreria.Entidades;
+using Libreria.Entidades.Filters;
 using Libreria.Repositorios.Handlers;
 using Libreria.Repositorios.Interface;
 using System.Data.SqlClient;
@@ -16,10 +17,10 @@ namespace Libreria.Repositorios
             _connectionString = Database.ConnectionString;
         }
 
-        public List<Estudiante> Get(int? id = null, string? legajo = null)
+        public List<Estudiante> Get(EstudianteFilters filters = null)
         {
             var sql = new StringBuilder();
-            var parameters = new DynamicParameters();
+            var dapperBuilder = new DapperBuilderManager();
 
             sql.AppendLine("SELECT");
             sql.AppendLine("  E.Id AS Id");
@@ -35,6 +36,8 @@ namespace Libreria.Repositorios
             sql.AppendLine(" ,I.Turno AS Turno");
             sql.AppendLine(" ,I.Aula AS Aula");
             sql.AppendLine(" ,I.Dia AS Dia");
+            sql.AppendLine(" ,I.Anio AS Anio");
+            sql.AppendLine(" ,I.Cuatrimestre AS Cuatrimestre");
             sql.AppendLine(" ,C.Id AS Id");
             sql.AppendLine(" ,C.Nombre AS Nombre");
             sql.AppendLine(" ,C.Codigo AS Codigo");
@@ -52,7 +55,7 @@ namespace Libreria.Repositorios
             sql.AppendLine("LEFT JOIN Pago P ON P.EstudianteId = E.Id");
             sql.AppendLine("LEFT JOIN Concepto CO ON CO.Id = P.ConceptoId");
 
-            GetFiltersParameters(sql, parameters, id, legajo);
+            BuildFilters(sql, dapperBuilder, filters);
 
             using var connection = new SqlConnection(_connectionString);
             var estudiantesDictionary = new Dictionary<int, Estudiante>();
@@ -91,7 +94,7 @@ namespace Libreria.Repositorios
 
                     return estudianteQuery;
 
-                }, param: parameters, splitOn: "Id, Id, Id, Id").AsList();
+                }, param: dapperBuilder.Parameters, splitOn: "Id, Id, Id, Id").AsList();
 
             return estudiantesDictionary.Values.ToList();
         }
@@ -147,25 +150,14 @@ namespace Libreria.Repositorios
             connection.Execute(sql.ToString(), parameters);
         }
 
-        private void GetFiltersParameters(StringBuilder sql, DynamicParameters parameters, int? id = null, string? legajo = null)
+        private static void BuildFilters(StringBuilder sql, DapperBuilderManager dapperBuilder, EstudianteFilters filters = null)
         {
-            var whereCondition = id.HasValue || !string.IsNullOrEmpty(legajo) ? "WHERE" : string.Empty;
-            sql.AppendLine(whereCondition);
-
-            if (id.HasValue)
-            {
-                sql.AppendLine("E.Id = @Id");
-                parameters.Add("Id", id);
-            }
-
-            if (!string.IsNullOrEmpty(legajo))
-            {
-                var and = id.HasValue ? "AND" : string.Empty;
-
-                sql.AppendLine(and);
-                sql.AppendLine("E.Legajo = @Legajo");
-                parameters.Add("Legajo", legajo);
-            }
+            dapperBuilder.AddWhereFilter("Id", "E.Id = @Id", filters?.Id)
+                         .AddWhereFilter("Legajo", "E.Legajo = @Legajo", filters?.Legajo)
+                         .AddWhereFilter("Anio", "I.Anio = @Anio", filters?.Anio)
+                         .AddWhereFilter("Cuatrimestre", "I.Cuatrimestre = @Cuatrimestre", filters?.Cuatrimestre)
+                         .AddWhereFilter("CodigoCurso", "C.Codigo = @CodigoCurso", filters?.CodigoCurso);
+            dapperBuilder.AddWhereToSQL(sql);
         }
     }
 }

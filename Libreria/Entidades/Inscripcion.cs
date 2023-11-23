@@ -11,6 +11,8 @@ namespace Libreria.Entidades
         private Turno _turno;
         private Dia _dia;
         private int _aula;
+        private int _anio;
+        private int _cuatrimestre;
         #endregion
 
         #region Propiedades
@@ -20,6 +22,8 @@ namespace Libreria.Entidades
         public Turno Turno { get => _turno; set => _turno = value; }
         public Dia Dia { get => _dia; set => _dia = value; }
         public int Aula { get => _aula; set => _aula = value; }
+        public int Anio { get => _anio; set => _anio = value; }
+        public int Cuatrimestre { get => _cuatrimestre; set => _cuatrimestre = value; }
         #endregion
     }
 }

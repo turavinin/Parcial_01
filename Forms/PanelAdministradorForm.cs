@@ -19,6 +19,12 @@
             cursosFrom.ShowDialog();
         }
 
+        private void btnGenerarReportes_Click(object sender, EventArgs e)
+        {
+            var form = new ReportesForm();
+            form.ShowDialog();
+        }
+
         private void btnCerrarAdminEst_Click(object sender, EventArgs e)
         {
             this.Close();

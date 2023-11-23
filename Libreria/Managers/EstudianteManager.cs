@@ -1,5 +1,6 @@
 ﻿using Libreria.Entidades;
 using Libreria.Entidades.Enums;
+using Libreria.Entidades.Filters;
 using Libreria.Exceptions;
 using Libreria.Exceptions.Enums;
 using Libreria.Managers.Interface;
@@ -29,7 +30,7 @@ namespace Libreria.Managers
 
         public bool Login(string legajo, string clave)
         {
-            var estudiante = _estudianteRepositorio.Get(legajo: legajo).FirstOrDefault();
+            var estudiante = _estudianteRepositorio.Get(new EstudianteFilters { Legajo = legajo }).FirstOrDefault();
             return estudiante != null && estudiante.ClaveValida(clave);
         }
 
@@ -40,12 +41,12 @@ namespace Libreria.Managers
 
         public Estudiante Get(int id)
         {
-            return _estudianteRepositorio.Get(id: id).FirstOrDefault();
+            return _estudianteRepositorio.Get(new EstudianteFilters { Id = id }).FirstOrDefault();
         }
 
         public Estudiante Get(string legajo)
         {
-            return _estudianteRepositorio.Get(legajo: legajo).FirstOrDefault();
+            return _estudianteRepositorio.Get(new EstudianteFilters { Legajo = legajo }).FirstOrDefault();
         }
 
         public void Crear(Estudiante estudiante)
@@ -140,6 +141,7 @@ namespace Libreria.Managers
 
                 if (inscripcion != null)
                 {
+                    AsginarAnioYCuatrimestre(inscripcion);
                     curso.Cupo--;
                     _cursoManager.Editar(curso);
                     _inscripcionManager.Crear(inscripcion, estudiante.Id);
@@ -257,6 +259,12 @@ namespace Libreria.Managers
             {
                 throw new ExceptionsInternas("No se pudo realizar le pago. Intente de nuevo.", TipoError.ErrorPago);
             }
+        }
+
+        private void AsginarAnioYCuatrimestre(Inscripcion inscripcion)
+        {
+            inscripcion.Anio = DateTime.Now.Year;
+            inscripcion.Cuatrimestre = DateTime.Now.Month <= 7 ? 1 : 2;
         }
     }
 }

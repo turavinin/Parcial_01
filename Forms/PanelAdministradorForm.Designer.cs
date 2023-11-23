@@ -33,6 +33,7 @@
             btnRegistrarEstudiante = new Button();
             btnGestionarCursos = new Button();
             btnCerrarAdminEst = new Button();
+            btnGenerarReportes = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -60,7 +61,7 @@
             // 
             btnRegistrarEstudiante.Anchor = AnchorStyles.None;
             btnRegistrarEstudiante.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnRegistrarEstudiante.Location = new Point(225, 236);
+            btnRegistrarEstudiante.Location = new Point(225, 231);
             btnRegistrarEstudiante.Name = "btnRegistrarEstudiante";
             btnRegistrarEstudiante.Size = new Size(342, 53);
             btnRegistrarEstudiante.TabIndex = 2;
@@ -73,7 +74,7 @@
             // 
             btnGestionarCursos.Anchor = AnchorStyles.None;
             btnGestionarCursos.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnGestionarCursos.Location = new Point(225, 305);
+            btnGestionarCursos.Location = new Point(225, 300);
             btnGestionarCursos.Name = "btnGestionarCursos";
             btnGestionarCursos.Size = new Size(342, 53);
             btnGestionarCursos.TabIndex = 3;
@@ -88,7 +89,7 @@
             btnCerrarAdminEst.BackColor = Color.Black;
             btnCerrarAdminEst.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
             btnCerrarAdminEst.ForeColor = Color.White;
-            btnCerrarAdminEst.Location = new Point(225, 401);
+            btnCerrarAdminEst.Location = new Point(225, 514);
             btnCerrarAdminEst.Name = "btnCerrarAdminEst";
             btnCerrarAdminEst.Size = new Size(342, 53);
             btnCerrarAdminEst.TabIndex = 4;
@@ -97,18 +98,33 @@
             btnCerrarAdminEst.UseVisualStyleBackColor = false;
             btnCerrarAdminEst.Click += btnCerrarAdminEst_Click;
             // 
-            // AdministracionEstudiantesForm
+            // btnGenerarReportes
+            // 
+            btnGenerarReportes.Anchor = AnchorStyles.None;
+            btnGenerarReportes.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
+            btnGenerarReportes.Location = new Point(225, 368);
+            btnGenerarReportes.Name = "btnGenerarReportes";
+            btnGenerarReportes.Size = new Size(342, 53);
+            btnGenerarReportes.TabIndex = 5;
+            btnGenerarReportes.Text = "GENERAR REPORTES";
+            btnGenerarReportes.TextImageRelation = TextImageRelation.TextAboveImage;
+            btnGenerarReportes.UseMnemonic = false;
+            btnGenerarReportes.UseVisualStyleBackColor = true;
+            btnGenerarReportes.Click += btnGenerarReportes_Click;
+            // 
+            // PanelAdministradorForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(787, 489);
+            ClientSize = new Size(787, 590);
             ControlBox = false;
+            Controls.Add(btnGenerarReportes);
             Controls.Add(btnCerrarAdminEst);
             Controls.Add(btnGestionarCursos);
             Controls.Add(btnRegistrarEstudiante);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
-            Name = "AdministracionEstudiantesForm";
+            Name = "PanelAdministradorForm";
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Administración de estudiantes";
@@ -124,5 +140,6 @@
         private Button btnRegistrarEstudiante;
         private Button btnGestionarCursos;
         private Button btnCerrarAdminEst;
+        private Button btnGenerarReportes;
     }
 }
