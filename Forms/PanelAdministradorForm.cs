@@ -29,5 +29,11 @@
         {
             this.Close();
         }
+
+        private void btnRequisitos_Click(object sender, EventArgs e)
+        {
+            var form = new RequisitosForm();
+            form.ShowDialog();
+        }
     }
 }

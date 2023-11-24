@@ -10,7 +10,11 @@ namespace Libreria.Entidades
         private string? _codigo;
         private string? _descripcion;
         private int? _cupo;
+        private string? _correlativas;
+        private int? _promedioMinimo;
+        private int? _creditoMinimo;
         private List<Inscripcion> _inscripciones;
+        private List<int> _cursosCorrelativosIds;
         private List<string> _erroresValidacion;
         #endregion
 
@@ -19,8 +23,12 @@ namespace Libreria.Entidades
         public string? Nombre { get => _nombre; set => _nombre = value; }
         public string? Codigo { get => _codigo; set => _codigo = value; }
         public string? Descripcion { get => _descripcion; set => _descripcion = value; }
+        public string? Correlativas { get => _correlativas; set => _correlativas = value; }
         public int? Cupo { get => _cupo; set => _cupo = value; }
+        public int? PromedioMinimo { get => _promedioMinimo; set => _promedioMinimo = value; }
+        public int? CreditoMinimo { get => _creditoMinimo; set => _creditoMinimo = value; }
         public List<Inscripcion> Inscripciones { get => _inscripciones; set => _inscripciones = value; }
+        public List<int> CursosCorrelativosIds { get => _cursosCorrelativosIds; set => _cursosCorrelativosIds = value; }
 
         public List<string> ErroresValidacion { get => _erroresValidacion; }
         #endregion

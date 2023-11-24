@@ -34,6 +34,7 @@
             btnGestionarCursos = new Button();
             btnCerrarAdminEst = new Button();
             btnGenerarReportes = new Button();
+            btnRequisitos = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -102,7 +103,7 @@
             // 
             btnGenerarReportes.Anchor = AnchorStyles.None;
             btnGenerarReportes.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnGenerarReportes.Location = new Point(225, 368);
+            btnGenerarReportes.Location = new Point(225, 442);
             btnGenerarReportes.Name = "btnGenerarReportes";
             btnGenerarReportes.Size = new Size(342, 53);
             btnGenerarReportes.TabIndex = 5;
@@ -112,12 +113,27 @@
             btnGenerarReportes.UseVisualStyleBackColor = true;
             btnGenerarReportes.Click += btnGenerarReportes_Click;
             // 
+            // btnRequisitos
+            // 
+            btnRequisitos.Anchor = AnchorStyles.None;
+            btnRequisitos.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
+            btnRequisitos.Location = new Point(225, 369);
+            btnRequisitos.Name = "btnRequisitos";
+            btnRequisitos.Size = new Size(342, 53);
+            btnRequisitos.TabIndex = 6;
+            btnRequisitos.Text = "GESTIONAR REQUISITOS";
+            btnRequisitos.TextImageRelation = TextImageRelation.TextAboveImage;
+            btnRequisitos.UseMnemonic = false;
+            btnRequisitos.UseVisualStyleBackColor = true;
+            btnRequisitos.Click += btnRequisitos_Click;
+            // 
             // PanelAdministradorForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(787, 590);
             ControlBox = false;
+            Controls.Add(btnRequisitos);
             Controls.Add(btnGenerarReportes);
             Controls.Add(btnCerrarAdminEst);
             Controls.Add(btnGestionarCursos);
@@ -141,5 +157,6 @@
         private Button btnGestionarCursos;
         private Button btnCerrarAdminEst;
         private Button btnGenerarReportes;
+        private Button btnRequisitos;
     }
 }

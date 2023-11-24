@@ -27,6 +27,9 @@ namespace Libreria.Repositorios
             sql.AppendLine(" ,C.Codigo AS Codigo");
             sql.AppendLine(" ,C.Descripcion AS Descripcion");
             sql.AppendLine(" ,C.Cupo AS Cupo");
+            sql.AppendLine(" ,C.Correlativas AS Correlativas");
+            sql.AppendLine(" ,C.PromedioMinimo AS PromedioMinimo");
+            sql.AppendLine(" ,C.CreditoMinimo AS CreditoMinimo");
             sql.AppendLine("FROM Curso C");
 
 
@@ -37,22 +40,29 @@ namespace Libreria.Repositorios
             }
 
             using var connection = new SqlConnection(_connectionString);
-            return connection.Query<Curso>(sql.ToString(), parameters).AsList();
+            var cursos = connection.Query<Curso>(sql.ToString(), parameters).AsList();
+
+            EstablecerCorrelativas(cursos);
+
+            return cursos;
         }
 
         public void Post(Curso curso)
         {
             var sql = new StringBuilder();
             sql.AppendLine("INSERT INTO Curso");
-            sql.AppendLine("(Nombre, Codigo, Descripcion, Cupo)");
+            sql.AppendLine("(Nombre, Codigo, Descripcion, Cupo, Correlativas, PromedioMinimo, CreditoMinimo)");
             sql.AppendLine("VALUES");
-            sql.AppendLine("(@Nombre, @Codigo, @Descripcion, @Cupo)");
+            sql.AppendLine("(@Nombre, @Codigo, @Descripcion, @Cupo, @Correlativas, @PromedioMinimo, @CreditoMinimo)");
 
             var parameters = new DynamicParameters();
             parameters.Add("Nombre", curso.Nombre);
             parameters.Add("Codigo", curso.Codigo);
             parameters.Add("Descripcion", curso.Descripcion);
             parameters.Add("Cupo", curso.Cupo);
+            parameters.Add("Correlativas", curso.Cupo);
+            parameters.Add("PromedioMinimo", curso.Cupo);
+            parameters.Add("CreditoMinimo", curso.Cupo);
 
             using var connection = new SqlConnection(_connectionString);
             connection.Execute(sql.ToString(), parameters);
@@ -66,6 +76,9 @@ namespace Libreria.Repositorios
             sql.AppendLine(",Codigo = @Codigo");
             sql.AppendLine(",Descripcion = @Descripcion");
             sql.AppendLine(",Cupo = @Cupo");
+            sql.AppendLine(",Correlativas = @Correlativas");
+            sql.AppendLine(",PromedioMinimo = @PromedioMinimo");
+            sql.AppendLine(",CreditoMinimo = @CreditoMinimo");
             sql.AppendLine("WHERE Id = @Id");
 
             var parameters = new DynamicParameters();
@@ -73,6 +86,9 @@ namespace Libreria.Repositorios
             parameters.Add("Codigo", curso.Codigo);
             parameters.Add("Descripcion", curso.Descripcion);
             parameters.Add("Cupo", curso.Cupo);
+            parameters.Add("Correlativas", curso.Correlativas);
+            parameters.Add("PromedioMinimo", curso.PromedioMinimo);
+            parameters.Add("CreditoMinimo", curso.CreditoMinimo);
             parameters.Add("Id", curso.Id);
 
             using var connection = new SqlConnection(_connectionString);
@@ -104,6 +120,17 @@ namespace Libreria.Repositorios
 
             using var connection = new SqlConnection(_connectionString);
             return connection.Query<Carrera>(sql.ToString(), parameters).AsList();
+        }
+
+        private void EstablecerCorrelativas(List<Curso> cursos) 
+        {
+            foreach (var curso in cursos)
+            {
+                if (!string.IsNullOrWhiteSpace(curso.Correlativas))
+                {
+                    curso.CursosCorrelativosIds = curso.Correlativas.Split(',').ToList().ConvertAll(int.Parse);
+                }
+            }
         }
     }
 }
