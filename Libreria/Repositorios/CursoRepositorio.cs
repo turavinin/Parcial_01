@@ -1,9 +1,7 @@
 ﻿using Dapper;
 using Libreria.Entidades;
-using Libreria.Entidades.Enums;
 using Libreria.Repositorios.Handlers;
 using Libreria.Repositorios.Interface;
-using Newtonsoft.Json;
 using System.Data.SqlClient;
 using System.Text;
 
@@ -92,6 +90,20 @@ namespace Libreria.Repositorios
 
             using var connection = new SqlConnection(_connectionString);
             connection.Execute(sql.ToString(), parameters);
+        }
+
+        public List<Carrera> GetCarreras()
+        {
+            var sql = new StringBuilder();
+            var parameters = new DynamicParameters();
+
+            sql.AppendLine("SELECT");
+            sql.AppendLine("  C.Id AS Id");
+            sql.AppendLine(" ,C.Descripcion AS Descripcion");
+            sql.AppendLine("FROM Carrera C");
+
+            using var connection = new SqlConnection(_connectionString);
+            return connection.Query<Carrera>(sql.ToString(), parameters).AsList();
         }
     }
 }

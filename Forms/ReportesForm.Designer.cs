@@ -111,6 +111,7 @@
             btnInformeIngrConcepto.Text = "INFORME INGRESOS POR CONCEPTO";
             btnInformeIngrConcepto.UseMnemonic = false;
             btnInformeIngrConcepto.UseVisualStyleBackColor = true;
+            btnInformeIngrConcepto.Click += btnInformeIngrConcepto_Click;
             // 
             // btnInformeEstInsc
             // 
@@ -123,6 +124,7 @@
             btnInformeEstInsc.Text = "INFORME ESTADISTICAS INSCRIPCION";
             btnInformeEstInsc.UseMnemonic = false;
             btnInformeEstInsc.UseVisualStyleBackColor = true;
+            btnInformeEstInsc.Click += btnInformeEstInsc_Click;
             // 
             // btnInformeListaEspera
             // 

@@ -38,5 +38,10 @@ namespace Libreria.Managers
         {
             _cursoRepositorio.Delete(id);
         }
+
+        public List<Carrera> GetCarreras()
+        {
+            return _cursoRepositorio.GetCarreras();
+        }
     }
 }

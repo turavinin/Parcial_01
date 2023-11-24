@@ -10,5 +10,7 @@ namespace Libreria.Managers.Interface
     {
         void GenerarInformeInscripcionPeriodos(int? año, int? cuatrimestre);
         void GenerarInformeEstudianteCursos(string codigoCurso);
+        void GenerarInformeIngresosConcepto(int conceptoId);
+        void GenerarInformeCarreras(int carreraId);
     }
 }

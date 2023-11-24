@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Libreria.Entidades;
+using Libreria.Entidades.Filters;
 using Libreria.Repositorios.Handlers;
 using Libreria.Repositorios.Interface;
 using System.Data.SqlClient;
@@ -13,6 +14,50 @@ namespace Libreria.Repositorios
         public PagoRepositorio()
         {
             _connectionString = Database.ConnectionString;
+        }
+
+        public List<Pago> Get(PagoFilters filters = null)
+        {
+            var sql = new StringBuilder();
+            var dapperBuilder = new DapperBuilderManager();
+
+            sql.AppendLine("SELECT");
+            sql.AppendLine("  P.Id AS Id");
+            sql.AppendLine(" ,P.MontoPagado AS MontoPagado");
+            sql.AppendLine(" ,P.Cancelado AS Cancelado");
+            sql.AppendLine(" ,C.Id AS Id");
+            sql.AppendLine(" ,C.Descripcion AS Descripcion");
+            sql.AppendLine("FROM Pago P");
+            sql.AppendLine("INNER JOIN Concepto C ON C.Id = P.ConceptoId");
+
+            dapperBuilder.AddWhereFilter("ConceptoId", "C.Id = @ConceptoId", filters?.ConceptoId);
+            dapperBuilder.AddWhereToSQL(sql);
+
+            using var connection = new SqlConnection(_connectionString);
+            var pagosDictionary = new Dictionary<int, Pago>();
+
+
+            var result = connection.Query<Pago, Concepto, Pago>(
+                sql.ToString(),
+                (pagoQuery, conceptoQuery) =>
+                {
+                    if (!pagosDictionary.TryGetValue(pagoQuery.Id, out var pagoExistente))
+                    {
+                        pagoExistente = pagoQuery;
+                        pagosDictionary.Add(pagoQuery.Id, pagoExistente);
+                    }
+
+                    if (conceptoQuery != null)
+                    {
+                        pagoExistente.Concepto = conceptoQuery;
+                    }
+
+                    return pagoQuery;
+
+                }, param: dapperBuilder.Parameters, splitOn: "Id").AsList();
+
+
+            return pagosDictionary.Values.ToList();
         }
 
         public void Post(Pago pago, int estudianteId)

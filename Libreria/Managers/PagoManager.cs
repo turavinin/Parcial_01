@@ -1,4 +1,5 @@
 ﻿using Libreria.Entidades;
+using Libreria.Entidades.Filters;
 using Libreria.Managers.Interface;
 using Libreria.Repositorios;
 using Libreria.Repositorios.Interface;
@@ -16,6 +17,11 @@ namespace Libreria.Managers
         public PagoManager()
         {
             _pagoRepositorio = new PagoRepositorio();
+        }
+
+        public List<Pago> Get(PagoFilters filters = null)
+        {
+            return _pagoRepositorio.Get(filters);
         }
 
         public void Crear(Pago pago, int estudianteId)

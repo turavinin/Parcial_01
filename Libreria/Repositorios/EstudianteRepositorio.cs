@@ -156,7 +156,8 @@ namespace Libreria.Repositorios
                          .AddWhereFilter("Legajo", "E.Legajo = @Legajo", filters?.Legajo)
                          .AddWhereFilter("Anio", "I.Anio = @Anio", filters?.Anio)
                          .AddWhereFilter("Cuatrimestre", "I.Cuatrimestre = @Cuatrimestre", filters?.Cuatrimestre)
-                         .AddWhereFilter("CodigoCurso", "C.Codigo = @CodigoCurso", filters?.CodigoCurso);
+                         .AddWhereFilter("CodigoCurso", "C.Codigo = @CodigoCurso", filters?.CodigoCurso)
+                         .AddWhereFilter("CarreraId", "C.CarreraId = @CarreraId", filters?.CarreraId);
             dapperBuilder.AddWhereToSQL(sql);
         }
     }

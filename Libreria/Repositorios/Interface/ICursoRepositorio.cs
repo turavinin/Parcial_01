@@ -8,5 +8,6 @@ namespace Libreria.Repositorios.Interface
         void Post(Curso curso);
         void Update(Curso curso);
         void Delete(int id);
+        List<Carrera> GetCarreras();
     }
 }

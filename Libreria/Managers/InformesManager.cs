@@ -1,20 +1,18 @@
-﻿using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml;
-using Libreria.Entidades.Filters;
+﻿using Libreria.Entidades.Filters;
+using Libreria.Helpers;
 using Libreria.Managers.Interface;
 using Libreria.Repositorios;
 using Libreria.Repositorios.Interface;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Libreria.Entidades;
-using Libreria.Helpers;
 
 namespace Libreria.Managers
 {
     public class InformesManager : IInformesManager
     {
         private readonly IEstudianteRepositorio _estudianteRepositorio;
+        private readonly IPagoRepositorio _pagoRepositorio;
         public InformesManager()
         {
+            _pagoRepositorio = new PagoRepositorio();
             _estudianteRepositorio = new EstudianteRepositorio();
         }
 
@@ -81,6 +79,66 @@ namespace Libreria.Managers
 
             var excelHelper = new ExcelHelper();
             excelHelper.SetFileData("InformeEstudianteCursos", "Informe Estudiantes Cursos")
+                       .SetHeaders(headers)
+                       .SetData(dataEstudiantes)
+                       .Export();
+        }
+
+        public void GenerarInformeIngresosConcepto(int conceptoId)
+        {
+            var filters = new PagoFilters { ConceptoId = conceptoId };
+            var pagos = _pagoRepositorio.Get(filters);
+
+            var headers = new List<string>() { "Concepto", "MontoPagado" };
+            var dataPagos = new List<List<string>>();
+            foreach (var pago in pagos)
+            {
+                var dataPago = new List<string>()
+                {
+                        pago.Concepto.Descripcion,
+                        pago.MontoPagado.ToString()
+                };
+
+                dataPagos.Add(dataPago);
+            }
+
+            var excelHelper = new ExcelHelper();
+            excelHelper.SetFileData("InformePagosConcepto", "Informe pagos Concepto")
+                       .SetHeaders(headers)
+                       .SetData(dataPagos)
+                       .Export();
+        }
+
+        public void GenerarInformeCarreras(int carreraId)
+        {
+            var filters = new EstudianteFilters
+            {
+                CarreraId = carreraId
+            };
+            var estudiantes = _estudianteRepositorio.Get(filters);
+
+            var headers = new List<string>() { "Nombre", "Legajo", "Documento", "Curso", "Cuatrimestre", "Año" };
+            var dataEstudiantes = new List<List<string>>();
+            foreach (var estudiante in estudiantes)
+            {
+                foreach (var inscripcion in estudiante.Inscripciones)
+                {
+                    var dataEstudiante = new List<string>()
+                    {
+                        estudiante.Nombre,
+                        estudiante.Legajo,
+                        estudiante.Documento,
+                        inscripcion.Curso.Nombre,
+                        inscripcion.Cuatrimestre.ToString(),
+                        inscripcion.Anio.ToString()
+                    };
+
+                    dataEstudiantes.Add(dataEstudiante);
+                }
+            }
+
+            var excelHelper = new ExcelHelper();
+            excelHelper.SetFileData("InformeCarreras", "Informe Carreras")
                        .SetHeaders(headers)
                        .SetData(dataEstudiantes)
                        .Export();

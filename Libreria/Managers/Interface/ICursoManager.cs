@@ -9,5 +9,6 @@ namespace Libreria.Managers.Interface
         void Crear(Curso curso);
         void Editar(Curso curso);
         void Eliminar(int id);
+        List<Carrera> GetCarreras();
     }
 }

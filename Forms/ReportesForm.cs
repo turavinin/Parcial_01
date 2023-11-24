@@ -33,5 +33,17 @@ namespace Forms
             var form = new ReporteEstudianteCursoParametrosForm();
             form.ShowDialog();
         }
+
+        private void btnInformeIngrConcepto_Click(object sender, EventArgs e)
+        {
+            var form = new ReporteIngresoConceptoParametrosForm();
+            form.ShowDialog();
+        }
+
+        private void btnInformeEstInsc_Click(object sender, EventArgs e)
+        {
+            var form = new ReporteCarreraParametrosForm();
+            form.ShowDialog();
+        }
     }
 }
