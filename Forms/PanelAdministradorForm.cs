@@ -35,5 +35,11 @@
             var form = new RequisitosForm();
             form.ShowDialog();
         }
+
+        private void btnProfesores_Click(object sender, EventArgs e)
+        {
+            var form = new ProfesoresForm();
+            form.ShowDialog();
+        }
     }
 }

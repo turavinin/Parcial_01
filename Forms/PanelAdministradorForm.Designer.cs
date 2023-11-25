@@ -35,6 +35,7 @@
             btnCerrarAdminEst = new Button();
             btnGenerarReportes = new Button();
             btnRequisitos = new Button();
+            btnProfesores = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -62,7 +63,7 @@
             // 
             btnRegistrarEstudiante.Anchor = AnchorStyles.None;
             btnRegistrarEstudiante.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnRegistrarEstudiante.Location = new Point(225, 231);
+            btnRegistrarEstudiante.Location = new Point(40, 229);
             btnRegistrarEstudiante.Name = "btnRegistrarEstudiante";
             btnRegistrarEstudiante.Size = new Size(342, 53);
             btnRegistrarEstudiante.TabIndex = 2;
@@ -75,7 +76,7 @@
             // 
             btnGestionarCursos.Anchor = AnchorStyles.None;
             btnGestionarCursos.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnGestionarCursos.Location = new Point(225, 300);
+            btnGestionarCursos.Location = new Point(40, 298);
             btnGestionarCursos.Name = "btnGestionarCursos";
             btnGestionarCursos.Size = new Size(342, 53);
             btnGestionarCursos.TabIndex = 3;
@@ -103,9 +104,9 @@
             // 
             btnGenerarReportes.Anchor = AnchorStyles.None;
             btnGenerarReportes.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnGenerarReportes.Location = new Point(225, 442);
+            btnGenerarReportes.Location = new Point(409, 302);
             btnGenerarReportes.Name = "btnGenerarReportes";
-            btnGenerarReportes.Size = new Size(342, 53);
+            btnGenerarReportes.Size = new Size(342, 49);
             btnGenerarReportes.TabIndex = 5;
             btnGenerarReportes.Text = "GENERAR REPORTES";
             btnGenerarReportes.TextImageRelation = TextImageRelation.TextAboveImage;
@@ -117,7 +118,7 @@
             // 
             btnRequisitos.Anchor = AnchorStyles.None;
             btnRequisitos.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnRequisitos.Location = new Point(225, 369);
+            btnRequisitos.Location = new Point(409, 229);
             btnRequisitos.Name = "btnRequisitos";
             btnRequisitos.Size = new Size(342, 53);
             btnRequisitos.TabIndex = 6;
@@ -127,12 +128,26 @@
             btnRequisitos.UseVisualStyleBackColor = true;
             btnRequisitos.Click += btnRequisitos_Click;
             // 
+            // btnProfesores
+            // 
+            btnProfesores.Anchor = AnchorStyles.None;
+            btnProfesores.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
+            btnProfesores.Location = new Point(225, 376);
+            btnProfesores.Name = "btnProfesores";
+            btnProfesores.Size = new Size(342, 53);
+            btnProfesores.TabIndex = 7;
+            btnProfesores.Text = "GESTIONAR PROFESORES";
+            btnProfesores.UseMnemonic = false;
+            btnProfesores.UseVisualStyleBackColor = true;
+            btnProfesores.Click += btnProfesores_Click;
+            // 
             // PanelAdministradorForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(787, 590);
             ControlBox = false;
+            Controls.Add(btnProfesores);
             Controls.Add(btnRequisitos);
             Controls.Add(btnGenerarReportes);
             Controls.Add(btnCerrarAdminEst);
@@ -158,5 +173,6 @@
         private Button btnCerrarAdminEst;
         private Button btnGenerarReportes;
         private Button btnRequisitos;
+        private Button btnProfesores;
     }
 }
