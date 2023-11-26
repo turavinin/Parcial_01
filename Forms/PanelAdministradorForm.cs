@@ -41,5 +41,11 @@
             var form = new ProfesoresForm();
             form.ShowDialog();
         }
+
+        private void btnListaEspera_Click(object sender, EventArgs e)
+        {
+            var form = new ListaEsperaForm();
+            form.ShowDialog();
+        }
     }
 }

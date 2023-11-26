@@ -36,6 +36,7 @@
             btnGenerarReportes = new Button();
             btnRequisitos = new Button();
             btnProfesores = new Button();
+            btnListaEspera = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -132,7 +133,7 @@
             // 
             btnProfesores.Anchor = AnchorStyles.None;
             btnProfesores.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
-            btnProfesores.Location = new Point(225, 376);
+            btnProfesores.Location = new Point(409, 369);
             btnProfesores.Name = "btnProfesores";
             btnProfesores.Size = new Size(342, 53);
             btnProfesores.TabIndex = 7;
@@ -141,12 +142,26 @@
             btnProfesores.UseVisualStyleBackColor = true;
             btnProfesores.Click += btnProfesores_Click;
             // 
+            // btnListaEspera
+            // 
+            btnListaEspera.Anchor = AnchorStyles.None;
+            btnListaEspera.Font = new Font("Agency FB", 16.2F, FontStyle.Bold, GraphicsUnit.Point);
+            btnListaEspera.Location = new Point(40, 369);
+            btnListaEspera.Name = "btnListaEspera";
+            btnListaEspera.Size = new Size(342, 53);
+            btnListaEspera.TabIndex = 8;
+            btnListaEspera.Text = "GESTIONAR LISTA ESPERA";
+            btnListaEspera.UseMnemonic = false;
+            btnListaEspera.UseVisualStyleBackColor = true;
+            btnListaEspera.Click += btnListaEspera_Click;
+            // 
             // PanelAdministradorForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(787, 590);
             ControlBox = false;
+            Controls.Add(btnListaEspera);
             Controls.Add(btnProfesores);
             Controls.Add(btnRequisitos);
             Controls.Add(btnGenerarReportes);
@@ -174,5 +189,6 @@
         private Button btnGenerarReportes;
         private Button btnRequisitos;
         private Button btnProfesores;
+        private Button btnListaEspera;
     }
 }
