@@ -10,14 +10,19 @@ using System.Text;
 
 namespace Libreria.Managers
 {
+    public delegate void DelegadoNotificacion(int estudianteId, List<Curso> cursos);
+
     public class EstudianteManager : IEstudianteManager
     {
         private EstudianteRepositorio _estudianteRepositorio;
 
         private ICursoManager _cursoManager;
+        private ICursoRepositorio _cursoRepositorio;
         private IConceptoManager _conceptoManager;
         private IPagoManager _pagoManager;
         private IInscripcionManager _inscripcionManager;
+        private INotificacionesRepositorio _notificacionesRepositorio;
+        public event DelegadoNotificacion EventoNotificacion;
 
         public EstudianteManager()
         {
@@ -26,6 +31,9 @@ namespace Libreria.Managers
             _pagoManager = new PagoManager();
             _conceptoManager = new ConceptoManager();
             _inscripcionManager = new InscripcionManager();
+            _notificacionesRepositorio = new NotificacionesRepositorio();
+            _cursoRepositorio = new CursoRepositorio();
+
         }
 
         public bool Login(string legajo, string clave)
@@ -128,6 +136,14 @@ namespace Libreria.Managers
                         _pagoManager.Actualizar(conceptoPagadoPreviamente, estudiante.Id);
                     }
                 }
+            }
+        }
+
+        public async Task CompletarNotificacion(int estudianteId, List<int> cursosIds)
+        {
+            foreach (var cursoId in cursosIds)
+            {
+                await _notificacionesRepositorio.ActualizarNotificaciones(estudianteId, cursoId);
             }
         }
 
@@ -265,6 +281,32 @@ namespace Libreria.Managers
         {
             inscripcion.Anio = DateTime.Now.Year;
             inscripcion.Cuatrimestre = DateTime.Now.Month <= 7 ? 1 : 2;
+        }
+
+        public async Task VerificarNotificacionesCursos(Estudiante estudiante)
+        {
+            do
+            {
+                var notificaciones = await _notificacionesRepositorio.Get(estudiante.Id);
+                var cursos = new List<Curso>();
+
+                if (notificaciones.Count > 0)
+                {
+                    foreach (var notificacion in notificaciones)
+                    {
+                        var curso = _cursoRepositorio.Get(new CursoFilters { Id = notificacion.CursoId }).FirstOrDefault();
+                        cursos.Add(curso);
+                    }
+
+                    if (this.EventoNotificacion is not null)
+                    {
+                        this.EventoNotificacion.Invoke(estudiante.Id, cursos);
+                    }
+                }
+
+                await Task.Delay(60000);
+
+            } while (true);
         }
     }
 }

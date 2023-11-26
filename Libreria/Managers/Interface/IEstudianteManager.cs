@@ -12,5 +12,6 @@ namespace Libreria.Managers.Interface
         bool Inscribir(Estudiante estudiante, List<string> cursoCodigos);
         void ActualizarClave(Estudiante estudiante);
         void Pagar(Estudiante estudiante, Pago pago, Dictionary<int, string> conceptoMontoPagado);
+        Task CompletarNotificacion(int estudianteId, List<int> cursosIds);
     }
 }

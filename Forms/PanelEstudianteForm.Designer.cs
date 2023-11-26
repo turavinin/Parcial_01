@@ -111,7 +111,7 @@
             btnRealizarPagos.UseVisualStyleBackColor = true;
             btnRealizarPagos.Click += btnRealizarPagos_Click;
             // 
-            // AdministracionInscripcionesForm
+            // PanelEstudianteForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -123,10 +123,11 @@
             Controls.Add(btnInscripcionCursos);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
-            Name = "AdministracionInscripcionesForm";
+            Name = "PanelEstudianteForm";
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Administración inscripciones";
+            Load += PanelEstudianteForm_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ResumeLayout(false);

@@ -1,4 +1,5 @@
-﻿using Libreria.Entidades;
+﻿using Forms.Helpers;
+using Libreria.Entidades;
 using Libreria.Managers;
 using Libreria.Managers.Interface;
 
@@ -8,9 +9,16 @@ namespace Forms
     {
         private int _estudianteId;
 
+        private readonly IEstudianteManager _estudianteManager;
+        private EstudianteManager estudianteManagerEvent;
+
         public PanelEstudianteForm(int estudianteId)
         {
             _estudianteId = estudianteId;
+            _estudianteManager = new EstudianteManager();
+
+            estudianteManagerEvent = new EstudianteManager();
+            estudianteManagerEvent.EventoNotificacion += NotificarCurso;
 
             InitializeComponent();
         }
@@ -38,5 +46,23 @@ namespace Forms
             this.Close();
         }
 
+        private void NotificarCurso(int estudianteId, List<Curso> cursos)
+        {
+            if (cursos.Count > 0)
+            {
+                var stringNombresCursos = string.Join(",", cursos.Select(x => x.Nombre));
+                _estudianteManager.CompletarNotificacion(estudianteId, cursos.Select(x => x.Id).ToList());
+                MensajesHelper.MensajeAceptar($"Se le inscribieron los siguientes cursos: {stringNombresCursos}");
+            }
+        }
+
+        private void PanelEstudianteForm_Load(object sender, EventArgs e)
+        {
+            var estudiante = estudianteManagerEvent.Get(_estudianteId);
+            Task.Run(async () =>
+            {
+                await estudianteManagerEvent.VerificarNotificacionesCursos(estudiante);
+            });
+        }
     }
 }
