@@ -1,6 +1,7 @@
 ﻿using Forms.Helpers;
 using Libreria.Entidades;
 using Libreria.Managers;
+using Libreria.Managers.Interface;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,10 +16,15 @@ namespace Forms
 {
     public partial class HorarioCursosForm : Form
     {
-        private AdministracionManager _administracionManager;
-        public HorarioCursosForm(AdministracionManager administracionManager)
+        private IEstudianteManager _estudianteManager;
+        private Estudiante _estudiante;
+
+
+        public HorarioCursosForm(int estudianteId)
         {
-            _administracionManager = administracionManager;
+            _estudianteManager = new EstudianteManager();
+            _estudiante = _estudianteManager.Get(id: estudianteId);
+
             InitializeComponent();
         }
 
@@ -29,16 +35,13 @@ namespace Forms
 
         private void ListEstudianteCursos()
         {
-            var estudianteCursos = _administracionManager.Get(_administracionManager.Estudiante.Legajo);
-
-            if (estudianteCursos != null && estudianteCursos.Any())
+            if (_estudiante.Inscripciones != null && _estudiante.Inscripciones.Any())
             {
                 this.dgvListaCursosEstudiante.Rows.Clear();
 
-                foreach (var estudianteCurso in estudianteCursos)
+                foreach (var inscrpcion in _estudiante.Inscripciones)
                 {
-                    var curso = _administracionManager.GetCurso(estudianteCurso.CodigoCurso);
-                    this.dgvListaCursosEstudiante.Rows.Add(curso.Nombre, curso.Codigo, estudianteCurso.Turno.ToString(), estudianteCurso.Dia.ToString(), curso.Aula);
+                    this.dgvListaCursosEstudiante.Rows.Add(inscrpcion.Curso.Nombre, inscrpcion.Curso.Codigo, inscrpcion.Turno.ToString(), inscrpcion.Dia.ToString(), inscrpcion.Aula.ToString());
                 }
             }
             else

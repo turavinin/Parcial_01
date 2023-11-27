@@ -1,41 +1,37 @@
-﻿using Libreria.Entidades;
+﻿using Dapper;
+using Libreria.Entidades;
 using Libreria.Repositorios.Handlers;
+using Libreria.Repositorios.Interface;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Libreria.Repositorios
 {
-    public class ConceptoRepositorio
+    public class ConceptoRepositorio : IConceptoRepositorio
     {
-        private readonly Archivo _archivo;
-        private readonly string _path;
+        private readonly string _connectionString;
 
         public ConceptoRepositorio()
         {
-            var pathSolucion = $"{Archivo.ObtenerDirectorioSolucion()?.FullName}\\Data\\Concepto";
-            _path = Path.Combine(pathSolucion, "concepto.json");
-            _archivo = new Archivo(_path);
+            _connectionString = Database.ConnectionString;
         }
 
-        /// <summary>
-        /// Obtiene lista de conceptos en la base.
-        /// </summary>
-        /// <returns>Lista de conceptos o lista vacía</returns>
         public List<Concepto> Get()
         {
-            var dataJson = _archivo.Leer();
-            var data = new List<Concepto>();
+            var sql = new StringBuilder();
+            sql.AppendLine("SELECT");
+            sql.AppendLine("  C.Id AS Id");
+            sql.AppendLine(" ,C.Descripcion AS Descripcion");
+            sql.AppendLine(" ,C.Monto AS Monto");
+            sql.AppendLine("FROM Concepto C");
 
-            if (!string.IsNullOrEmpty(dataJson))
-            {
-                data = JsonConvert.DeserializeObject<List<Concepto>>(dataJson);
-            }
-
-            return data;
+            using var connection = new SqlConnection(_connectionString);
+            return connection.Query<Concepto>(sql.ToString()).AsList();
         }
     }
 }

@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Libreria.Managers.Interface;
 
 namespace Forms
 {
@@ -21,18 +22,62 @@ namespace Forms
         private const int COLUMNA_CODIGO = 2;
         private const int COLUMNA_CUPO = 4;
 
-        private AdministracionManager _administracionManager;
+        private IEstudianteManager _estudianteManager;
+        private ICursoManager _cursoManager;
+        private Estudiante _estudiante;
         private List<Curso> _cursos;
 
-        public InscripcionCursosForm(AdministracionManager administracionManager)
+        public InscripcionCursosForm(int estudianteId)
         {
-            _administracionManager = administracionManager;
+            _estudianteManager = new EstudianteManager();
+            _cursoManager = new CursoManager();
+
+            _estudiante = _estudianteManager.Get(id: estudianteId);
+
             InitializeComponent();
         }
 
         private void InscripcionCursosForm_Load(object sender, EventArgs e)
         {
             ListarCursos();
+        }
+
+        private void ListarCursos()
+        {
+            _cursos = _cursoManager.Get();
+            var estudianteActualizado = _estudianteManager.Get(_estudiante.Id);
+
+            if (_cursos != null && _cursos.Any())
+            {
+                this.dgvListaCursosEstudiante.Rows.Clear();
+
+                foreach (var curso in _cursos)
+                {
+                    var index = this.dgvListaCursosEstudiante.Rows.Add(false, curso.Nombre, curso.Codigo, curso.Descripcion, curso.Cupo);
+
+                    if (estudianteActualizado.Inscripciones.Any(x => x.Curso.Codigo == curso.Codigo))
+                    {
+                        DisableChekbox(index, Color.Green);
+                    }
+                    else if (curso.Cupo <= 0)
+                    {
+                        DisableChekbox(index);
+                    }
+                }
+            }
+        }
+
+        private void DisableChekbox(int rowIndex, Color? color = null)
+        {
+            this.dgvListaCursosEstudiante.Rows[rowIndex].Cells[0] = new DataGridViewTextBoxCell();
+            this.dgvListaCursosEstudiante.Rows[rowIndex].Cells[0].Value = "";
+            this.dgvListaCursosEstudiante.Rows[rowIndex].Cells[0].ReadOnly = true;
+
+            if (color != null)
+            {
+                this.dgvListaCursosEstudiante.Rows[rowIndex].Cells[0].Style.BackColor = (Color)color;
+
+            }
         }
 
         private void dgvListaCursosEstudiante_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -92,7 +137,7 @@ namespace Forms
         {
             try
             {
-                return _administracionManager.InscribirCursosAEstudiante(_administracionManager.Estudiante, codigosCursos);
+                return _estudianteManager.Inscribir(_estudiante, codigosCursos);
             }
             catch (Exception ex)
             {
@@ -107,18 +152,6 @@ namespace Forms
             }
         }
 
-        private void DisableChekbox(int rowIndex, Color? color = null)
-        {
-            this.dgvListaCursosEstudiante.Rows[rowIndex].Cells[0] = new DataGridViewTextBoxCell();
-            this.dgvListaCursosEstudiante.Rows[rowIndex].Cells[0].Value = "";
-            this.dgvListaCursosEstudiante.Rows[rowIndex].Cells[0].ReadOnly = true;
-
-            if (color != null)
-            {
-                this.dgvListaCursosEstudiante.Rows[rowIndex].Cells[0].Style.BackColor = (Color)color;
-
-            }
-        }
 
         private List<string> GetCodigosCursosSeleccionados()
         {
@@ -150,12 +183,11 @@ namespace Forms
             cell.ReadOnly = true;
 
             var codigo = ObtenerCodigoCursoSeleccionado();
-            var hayCupoDisponible = _administracionManager.GetCurso(codigo);
+            var curso = _cursos.FirstOrDefault(x => x.Codigo == codigo);
 
-            if (hayCupoDisponible != null && hayCupoDisponible.CupoMaximo <= 0)
+            if (curso?.Cupo == null || curso.Cupo <= 0)
             {
-                var cursoNoDisponible = _cursos.FirstOrDefault(x => x.Codigo == codigo);
-                MensajesHelper.MostrarError($"No hay cupo disponible para el curso de {cursoNoDisponible.Nombre}");
+                MensajesHelper.MostrarError($"No hay cupo disponible para el curso de {curso.Nombre}");
 
                 DisableChekbox(rowIndex);
                 dgvListaCursosEstudiante[COLUMNA_CUPO, rowIndex].Value = 0;
@@ -166,30 +198,7 @@ namespace Forms
             }
         }
 
-        private void ListarCursos()
-        {
-            _cursos = _administracionManager.GetCursos();
-            var estudianteActualizado = _administracionManager.GetEstudiante(_administracionManager.Estudiante.Legajo);
-
-            if (_cursos != null && _cursos.Any())
-            {
-                this.dgvListaCursosEstudiante.Rows.Clear();
-
-                foreach (var curso in _cursos)
-                {
-                    var index = this.dgvListaCursosEstudiante.Rows.Add(false, curso.Nombre, curso.Codigo, curso.Descripcion, curso.CupoMaximo);
-
-                    if (estudianteActualizado.Cursos.Any(x => x.Codigo == curso.Codigo))
-                    {
-                        DisableChekbox(index, Color.Green);
-                    }
-                    else if (curso.CupoMaximo <= 0)
-                    {
-                        DisableChekbox(index);
-                    }
-                }
-            }
-        }
+        
 
         private void btnCancelarInscripcion_Click(object sender, EventArgs e)
         {

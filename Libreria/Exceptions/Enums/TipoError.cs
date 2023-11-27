@@ -10,6 +10,8 @@
         ErrorInscribirCursoAEstudiante,
         ErrorPago,
         ErrorCrearCurso,
-        ErrorEditarCurso
+        ErrorEditarCurso,
+        ErrorCrearProfesor,
+        ErrorEditarProfesor
     }
 }

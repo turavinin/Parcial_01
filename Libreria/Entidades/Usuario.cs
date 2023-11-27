@@ -2,10 +2,15 @@
 {
     public class Usuario
     {
+        private int _id;
         private string? _clave;
 
+        public int Id { get => _id; set => _id = value; }
         public string? Clave { get => _clave; set => _clave = value; }
 
+        public Usuario()
+        {
+        }
         public Usuario(string? clave = null, bool generarClaveProvisional = false)
         {
             if (generarClaveProvisional)

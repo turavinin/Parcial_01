@@ -1,105 +1,240 @@
-﻿using Libreria.Entidades;
+﻿using Dapper;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Libreria.Entidades;
+using Libreria.Entidades.Filters;
 using Libreria.Repositorios.Handlers;
-using Newtonsoft.Json;
+using Libreria.Repositorios.Interface;
+using System.Data.SqlClient;
+using System.Text;
 
 namespace Libreria.Repositorios
 {
-    public class CursoRepositorio
+    public class CursoRepositorio : ICursoRepositorio
     {
-        private readonly Archivo _archivo;
-        private readonly string _path;
+        private readonly string _connectionString;
 
         public CursoRepositorio()
         {
-            var pathSolucion = $"{Archivo.ObtenerDirectorioSolucion()?.FullName}\\Data\\Cursos";
-            _path = Path.Combine(pathSolucion, "cursos.json");
-            _archivo = new Archivo(_path);
+            _connectionString = Database.ConnectionString;
         }
 
-        /// <summary>
-        /// Obtiene la lista de cursos guardados en la base.
-        /// </summary>
-        /// <returns></returns>
-        public List<Curso>? Get()
+        public List<Curso> Get(CursoFilters filters = null)
         {
-            var dataString = _archivo.Leer();
-            var data = new List<Curso>();
+            var sql = new StringBuilder();
+            var dapperBuilder = new DapperBuilderManager();
 
-            if (!string.IsNullOrEmpty(dataString))
-            {
-                data = JsonConvert.DeserializeObject<List<Curso>>(dataString);
-            }
+            sql.AppendLine("SELECT");
+            sql.AppendLine("  C.Id AS Id");
+            sql.AppendLine(" ,C.Nombre AS Nombre");
+            sql.AppendLine(" ,C.Codigo AS Codigo");
+            sql.AppendLine(" ,C.Descripcion AS Descripcion");
+            sql.AppendLine(" ,C.Cupo AS Cupo");
+            sql.AppendLine(" ,C.Correlativas AS Correlativas");
+            sql.AppendLine(" ,C.PromedioMinimo AS PromedioMinimo");
+            sql.AppendLine(" ,C.CreditoMinimo AS CreditoMinimo");
+            sql.AppendLine("FROM Curso C");
 
-            return data;
+            dapperBuilder.AddWhereFilter("Id", "C.Id = @Id", filters?.Id)
+                         .AddWhereBoolFilter("SinCupo", "C.Cupo = 0", filters?.SinCupo)
+                         .AddWhereToSQL(sql);
+
+            using var connection = new SqlConnection(_connectionString);
+            var cursos = connection.Query<Curso>(sql.ToString(), dapperBuilder.Parameters).AsList();
+
+            EstablecerCorrelativas(cursos);
+
+            return cursos;
         }
 
-        /// <summary>
-        /// Obtiene curso por su código.
-        /// </summary>
-        /// <param name="codigo"></param>
-        /// <returns></returns>
-        public Curso? Get(string codigo)
-        {
-            var cursos = Get();
-
-            if (cursos.Any())
-            {
-                return cursos?.FirstOrDefault(x => string.Equals(x.Codigo, codigo, StringComparison.OrdinalIgnoreCase));
-            }
-
-            return default;
-        }
-
-        /// <summary>
-        /// Guarda un curso nuevo.
-        /// </summary>
-        /// <param name="curso"></param>
         public void Post(Curso curso)
         {
-            var cursos = this.Get();
-            cursos ??= new List<Curso>();
+            var sql = new StringBuilder();
+            sql.AppendLine("INSERT INTO Curso");
+            sql.AppendLine("(Nombre, Codigo, Descripcion, Cupo, Correlativas, PromedioMinimo, CreditoMinimo)");
+            sql.AppendLine("VALUES");
+            sql.AppendLine("(@Nombre, @Codigo, @Descripcion, @Cupo, @Correlativas, @PromedioMinimo, @CreditoMinimo)");
 
-            cursos.Add(curso);
-            var cursosJson = JsonConvert.SerializeObject(cursos);
-            _archivo.Escribir(cursosJson);
+            var parameters = new DynamicParameters();
+            parameters.Add("Nombre", curso.Nombre);
+            parameters.Add("Codigo", curso.Codigo);
+            parameters.Add("Descripcion", curso.Descripcion);
+            parameters.Add("Cupo", curso.Cupo);
+            parameters.Add("Correlativas", curso.Cupo);
+            parameters.Add("PromedioMinimo", curso.Cupo);
+            parameters.Add("CreditoMinimo", curso.Cupo);
+
+            using var connection = new SqlConnection(_connectionString);
+            connection.Execute(sql.ToString(), parameters);
         }
 
-        /// <summary>
-        /// Actualiza un curso.
-        /// </summary>
-        /// <param name="curso"></param>
-        /// <param name="codigoCursoGuardado"></param>
-        public void Update(Curso curso, string codigoCursoGuardado)
+        public void Update(Curso curso)
         {
-            var cursos = this.Get();
-            cursos ??= new List<Curso>();
-            var cursoExistente = cursos?.FirstOrDefault(x => string.Equals(x.Codigo, codigoCursoGuardado, StringComparison.OrdinalIgnoreCase));
+            var sql = new StringBuilder();
+            sql.AppendLine("UPDATE Curso SET");
+            sql.AppendLine("Nombre = @Nombre");
+            sql.AppendLine(",Codigo = @Codigo");
+            sql.AppendLine(",Descripcion = @Descripcion");
+            sql.AppendLine(",Cupo = @Cupo");
+            sql.AppendLine(",Correlativas = @Correlativas");
+            sql.AppendLine(",PromedioMinimo = @PromedioMinimo");
+            sql.AppendLine(",CreditoMinimo = @CreditoMinimo");
+            sql.AppendLine("WHERE Id = @Id");
 
-            if (cursoExistente != null)
-            {
-                cursoExistente.Codigo = curso.Codigo;
-                cursoExistente.Nombre = curso.Nombre;
-                cursoExistente.Descripcion = curso.Descripcion;
-                cursoExistente.CupoMaximo = curso.CupoMaximo;
-            }
+            var parameters = new DynamicParameters();
+            parameters.Add("Nombre", curso.Nombre);
+            parameters.Add("Codigo", curso.Codigo);
+            parameters.Add("Descripcion", curso.Descripcion);
+            parameters.Add("Cupo", curso.Cupo);
+            parameters.Add("Correlativas", curso.Correlativas);
+            parameters.Add("PromedioMinimo", curso.PromedioMinimo);
+            parameters.Add("CreditoMinimo", curso.CreditoMinimo);
+            parameters.Add("Id", curso.Id);
 
-            var cursosJson = JsonConvert.SerializeObject(cursos);
-            _archivo.Escribir(cursosJson);
+            using var connection = new SqlConnection(_connectionString);
+            connection.Execute(sql.ToString(), parameters);
         }
 
-        /// <summary>
-        /// Elimina un curso.
-        /// </summary>
-        /// <param name="codigo"></param>
-        public void Delete(string codigo)
+        public void Delete(int id)
         {
-            var cursos = this.Get();
+            var sql = new StringBuilder();
+            sql.AppendLine("DELETE FROM Curso");
+            sql.AppendLine("WHERE Id = @Id");
 
-            if(cursos != null && cursos.Count > 0) 
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", id);
+
+            using var connection = new SqlConnection(_connectionString);
+            connection.Execute(sql.ToString(), parameters);
+        }
+
+        public List<Carrera> GetCarreras()
+        {
+            var sql = new StringBuilder();
+            var parameters = new DynamicParameters();
+
+            sql.AppendLine("SELECT");
+            sql.AppendLine("  C.Id AS Id");
+            sql.AppendLine(" ,C.Descripcion AS Descripcion");
+            sql.AppendLine("FROM Carrera C");
+
+            using var connection = new SqlConnection(_connectionString);
+            return connection.Query<Carrera>(sql.ToString(), parameters).AsList();
+        }
+
+        public List<ListaEspera> GetListaEspera(ListaEsperaFilters filters = null)
+        {
+            var sql = new StringBuilder();
+            var dapperBuilder = new DapperBuilderManager();
+
+            sql.AppendLine("SELECT");
+            sql.AppendLine("  LE.Id AS Id");
+            sql.AppendLine(" ,LE.FechaAgregado AS FechaAgregado");
+            sql.AppendLine(" ,LE.FechaInscripto AS FechaInscripto");
+            sql.AppendLine(" ,E.Id AS Id");
+            sql.AppendLine(" ,E.Legajo AS Legajo");
+            sql.AppendLine(" ,E.Nombre AS Nombre");
+            sql.AppendLine(" ,E.Direccion AS Direccion");
+            sql.AppendLine(" ,E.Documento AS Documento");
+            sql.AppendLine(" ,E.Telefono AS Telefono");
+            sql.AppendLine(" ,E.Email AS Email");
+            sql.AppendLine(" ,E.Clave AS Clave");
+            sql.AppendLine(" ,E.CambiarClave AS CambiarClave");
+            sql.AppendLine(" ,C.Id AS Id");
+            sql.AppendLine(" ,C.Nombre AS Nombre");
+            sql.AppendLine(" ,C.Codigo AS Codigo");
+            sql.AppendLine(" ,C.Descripcion AS Descripcion"); ;
+            sql.AppendLine(" ,C.Cupo AS Cupo");
+            sql.AppendLine("FROM ListaEspera LE");
+            sql.AppendLine("INNER JOIN Estudiante E ON E.Id = LE.EstudianteId");
+            sql.AppendLine("INNER JOIN Curso C ON C.Id = LE.CursoId");
+
+            dapperBuilder.AddWhereFilter("CursoId", "C.Id = @CursoId", filters?.CursoId)
+                         .AddWhereFilter("EstudianteId", "E.Id = @EstudianteId", filters?.EstudianteId)
+                         .AddWhereConditionalFilter("Inscripto", "LE.FechaInscripto IS NOT NULL", "LE.FechaInscripto IS NULL", filters?.Inscripto)
+                         .AddWhereToSQL(sql);
+
+            using var connection = new SqlConnection(_connectionString);
+            var listasEspera = new Dictionary<int, ListaEspera>();
+
+            var result = connection.Query<ListaEspera, Estudiante, Curso, ListaEspera>(
+                sql.ToString(),
+                (listaEsperaQuery, estudianteQuery, cursoQuery) =>
+                {
+                    if (!listasEspera.TryGetValue(listaEsperaQuery.Id, out var listaEsperaExistente))
+                    {
+                        listaEsperaExistente = listaEsperaQuery;
+                        listasEspera.Add(listaEsperaQuery.Id, listaEsperaExistente);
+                    }
+
+                    if (estudianteQuery != null)
+                    {
+                        listaEsperaQuery.Estudiante = estudianteQuery;
+                    }
+
+                    if (cursoQuery != null)
+                    {
+                        listaEsperaQuery.Curso = cursoQuery;
+                    }
+
+                    return listaEsperaQuery;
+
+                }, param: dapperBuilder.Parameters, splitOn: "Id, Id").AsList();
+
+            return listasEspera.Values.ToList();
+
+        }
+
+        public void GuardarListaEspera(Estudiante estudiante, int cursoId)
+        {
+            var sql = new StringBuilder();
+            var dapperBuilder = new DapperBuilderManager();
+
+            sql.AppendLine("INSERT INTO ListaEspera");
+            dapperBuilder.AddInsertFilter("EstudianteId", "EstudianteId", estudiante.Id)
+                         .AddInsertFilter("CursoId", "CursoId", cursoId)
+                         .AddInsertFilter("FechaAgregado", "FechaAgregado", DateTime.Now)
+                         .AddInsertToSQL(sql);
+
+
+            using var connection = new SqlConnection(_connectionString);
+            connection.Execute(sql.ToString(), dapperBuilder.Parameters);
+        }
+
+        public void EliminarListaEspera(Estudiante estudiante, int cursoId)
+        {
+            var sql = new StringBuilder();
+            var dapperBuilder = new DapperBuilderManager();
+
+            dapperBuilder.AddWhereFilter("EstudianteId", "EstudianteId = @EstudianteId", estudiante.Id)
+                         .AddWhereFilter("CursoId", "CursoId = @CursoId", cursoId)
+                         .AddDeleteFromWhereToSQL(sql, "ListaEspera");
+
+            using var connection = new SqlConnection(_connectionString);
+            connection.Execute(sql.ToString(), dapperBuilder.Parameters);
+        }
+
+        public void CompletarListaEspera(Estudiante estudiante, int cursoId)
+        {
+            var sql = new StringBuilder();
+            var dapperBuilder = new DapperBuilderManager();
+
+            dapperBuilder.AddSetFilter("FechaInscripto", "FechaInscripto = @FechaInscripto", DateTime.Now)
+                .AddWhereFilter("EstudianteId", "EstudianteId = @EstudianteId", estudiante.Id)
+                .AddWhereFilter("CursoId", "CursoId = @CursoId", cursoId)
+                .AddUpdateSetWhereToSQL(sql, "ListaEspera");
+
+            using var connection = new SqlConnection(_connectionString);
+            connection.Execute(sql.ToString(), dapperBuilder.Parameters);
+        }
+
+        private void EstablecerCorrelativas(List<Curso> cursos) 
+        {
+            foreach (var curso in cursos)
             {
-                cursos.RemoveAll(x => x.Codigo == codigo);
-                var cursosJson = JsonConvert.SerializeObject(cursos);
-                _archivo.Escribir(cursosJson);
+                if (!string.IsNullOrWhiteSpace(curso.Correlativas))
+                {
+                    curso.CursosCorrelativosIds = curso.Correlativas.Split(',').ToList().ConvertAll(int.Parse);
+                }
             }
         }
     }

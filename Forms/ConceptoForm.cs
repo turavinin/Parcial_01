@@ -12,19 +12,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Libreria.Managers.Interface;
 
 namespace Forms
 {
     public partial class ConceptoForm : Form
     {
-        private AdministracionManager _administracionManager;
+        private IEstudianteManager _estudianteManager;
+        private IConceptoManager _conceptoManager;
+        private Estudiante _estudiante;
         private List<Concepto> _conceptos;
 
         private const int COLUMNA_INGRESAR_MONTO = 3;
         private const int COLUMNA_MONTO = 2;
-        public ConceptoForm(AdministracionManager administracionManager)
+        public ConceptoForm(int estudianteId)
         {
-            _administracionManager = administracionManager;
+            _estudianteManager = new EstudianteManager();
+            _conceptoManager = new ConceptoManager();
+            _estudiante = _estudianteManager.Get(estudianteId);
+
             InitializeComponent();
         }
 
@@ -35,8 +41,8 @@ namespace Forms
 
         private void ListarConceptos()
         {
-            _conceptos = _administracionManager.GetConceptos();
-            var estudianteConceptos = _administracionManager.GetEstudianteConcepto(_administracionManager.Estudiante.Legajo);
+            var estudianteActualizado = _estudianteManager.Get(_estudiante.Id);
+            _conceptos = _conceptoManager.Get();
 
             if (_conceptos.Count > 0)
             {
@@ -45,18 +51,18 @@ namespace Forms
                 foreach (var concepto in _conceptos)
                 {
                     var index = this.dgvListaConceptos.Rows.Add(false, concepto.Descripcion, concepto.Monto);
-                    var estudianteConcepto = estudianteConceptos.FirstOrDefault(x => x.IdConcepto == concepto.Id);
+                    var conceptoPagado = estudianteActualizado.Pagos.FirstOrDefault(x => x.Concepto.Id == concepto.Id);
 
-                    if (estudianteConcepto?.Cancelado == true)
+                    if (conceptoPagado?.Cancelado == true)
                     {
                         DesactivarTexto(index, Color.Green);
                         ActualizarMonto(index, "Pagado");
                         DesactivarChekbox(index, Color.Green);
 
                     }
-                    else if (estudianteConcepto?.MontoPagado != null)
+                    else if (conceptoPagado?.MontoPagado != null)
                     {
-                        concepto.Monto = concepto.Monto - estudianteConcepto.MontoPagado;
+                        concepto.Monto = concepto.Monto - conceptoPagado.MontoPagado;
                         ActualizarMonto(index, concepto.Monto.ToString());
                         DesactivarTexto(index, Color.Gray);
                     }
@@ -155,7 +161,7 @@ namespace Forms
             }
             else
             {
-                var form = new DatosPagoForm(_administracionManager, conceptosIdsConMontos);
+                var form = new PagoForm(conceptosIdsConMontos);
                 var result = form.ShowDialog();
 
                 if (result == DialogResult.OK)
@@ -208,7 +214,7 @@ namespace Forms
                 {
                     MensajesHelper.Errores.Add($"El monto a pagar es obligatorio para el concepto: {concepto.Descripcion}");
                 }
-                else if (!float.TryParse(monto, out float conceptoDecimalAPagar) || conceptoDecimalAPagar < 1)
+                else if (!int.TryParse(monto, out int conceptoDecimalAPagar) || conceptoDecimalAPagar < 1)
                 {
                     MensajesHelper.Errores.Add($"El monto a pagar es inválido para el concepto: {concepto.Descripcion}");
                 }
@@ -221,12 +227,13 @@ namespace Forms
             return !MensajesHelper.Errores.Any();
         }
 
-        private bool ProcesarPago(DatosPago pago, Dictionary<int, string> conceptoMontoPagado)
+        private bool ProcesarPago(Pago pago, Dictionary<int, string> conceptoMontoPagado)
         {
+            var pagoValido = true;
             try
             {
-                _administracionManager.ProcesarPago(_administracionManager.Estudiante, pago, conceptoMontoPagado);
-                return true;
+                var estudiante = _estudianteManager.Get(_estudiante.Id);
+                _estudianteManager.Pagar(estudiante, pago, conceptoMontoPagado);
             }
             catch (Exception ex)
             {
@@ -237,8 +244,10 @@ namespace Forms
                     MensajesHelper.Errores = exInterna.Errores;
                 }
 
-                return false;
+                pagoValido = false;
             }
+
+            return pagoValido;
         }
     }
 }

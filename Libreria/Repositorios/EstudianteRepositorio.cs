@@ -1,111 +1,164 @@
-﻿using Libreria.Entidades;
+﻿using Dapper;
+using Libreria.Entidades;
+using Libreria.Entidades.Filters;
 using Libreria.Repositorios.Handlers;
-using Newtonsoft.Json;
+using Libreria.Repositorios.Interface;
+using System.Data.SqlClient;
+using System.Text;
 
 namespace Libreria.Repositorios
 {
-    public class EstudianteRepositorio
+    public class EstudianteRepositorio : IEstudianteRepositorio
     {
-        private readonly Archivo _archivo;
-        private readonly string _pathEstudiantes;
-        private EstudianteCursoRepositorio _estudiantesCursosRepositorio;
-        private CursoRepositorio _cursoRepositorio;
+        private readonly string _connectionString;
 
         public EstudianteRepositorio()
         {
-            var pathSolucion = $"{Archivo.ObtenerDirectorioSolucion()?.FullName}\\Data\\Estudiantes";
-            _pathEstudiantes = Path.Combine(pathSolucion, "estudiantes.json");
-            _archivo = new Archivo(_pathEstudiantes);
-            _estudiantesCursosRepositorio = new EstudianteCursoRepositorio();
-            _cursoRepositorio = new CursoRepositorio();
+            _connectionString = Database.ConnectionString;
         }
 
-        /// <summary>
-        /// Obtiene la lista de estudiante en base.
-        /// </summary>
-        /// <returns></returns>
-        public List<Estudiante>? Get()
+        public List<Estudiante> Get(EstudianteFilters filters = null)
         {
-            var datosEstudiantes = _archivo.Leer();
+            var sql = new StringBuilder();
+            var dapperBuilder = new DapperBuilderManager();
 
-            if (!string.IsNullOrEmpty(datosEstudiantes))
-            {
-                var estudiantes = JsonConvert.DeserializeObject<List<Estudiante>>(datosEstudiantes);
-                RelacionarCursoAEstudiante(estudiantes);
-                return estudiantes;
-            }
+            sql.AppendLine("SELECT");
+            sql.AppendLine("  E.Id AS Id");
+            sql.AppendLine(" ,E.Legajo AS Legajo");
+            sql.AppendLine(" ,E.Nombre AS Nombre");
+            sql.AppendLine(" ,E.Direccion AS Direccion");
+            sql.AppendLine(" ,E.Documento AS Documento");
+            sql.AppendLine(" ,E.Telefono AS Telefono");
+            sql.AppendLine(" ,E.Email AS Email");
+            sql.AppendLine(" ,E.Clave AS Clave");
+            sql.AppendLine(" ,E.CambiarClave AS CambiarClave");
+            sql.AppendLine(" ,I.Id AS Id");
+            sql.AppendLine(" ,I.Turno AS Turno");
+            sql.AppendLine(" ,I.Aula AS Aula");
+            sql.AppendLine(" ,I.Dia AS Dia");
+            sql.AppendLine(" ,I.Anio AS Anio");
+            sql.AppendLine(" ,I.Cuatrimestre AS Cuatrimestre");
+            sql.AppendLine(" ,C.Id AS Id");
+            sql.AppendLine(" ,C.Nombre AS Nombre");
+            sql.AppendLine(" ,C.Codigo AS Codigo");
+            sql.AppendLine(" ,C.Descripcion AS Descripcion");;
+            sql.AppendLine(" ,C.Cupo AS Cupo");
+            sql.AppendLine(" ,P.Id AS Id");
+            sql.AppendLine(" ,P.MontoPagado AS MontoPagado");
+            sql.AppendLine(" ,P.Cancelado AS Cancelado");
+            sql.AppendLine(" ,CO.Id AS Id");
+            sql.AppendLine(" ,CO.Descripcion AS Descripcion");
+            sql.AppendLine(" ,CO.Monto AS Monto");
+            sql.AppendLine("FROM Estudiante E");
+            sql.AppendLine("LEFT JOIN Inscripcion I ON E.Id = I.EstudianteId");
+            sql.AppendLine("LEFT JOIN Curso C ON C.Id = I.CursoId");
+            sql.AppendLine("LEFT JOIN Pago P ON P.EstudianteId = E.Id");
+            sql.AppendLine("LEFT JOIN Concepto CO ON CO.Id = P.ConceptoId");
 
-            return default;
+            BuildFilters(sql, dapperBuilder, filters);
+
+            using var connection = new SqlConnection(_connectionString);
+            var estudiantesDictionary = new Dictionary<int, Estudiante>();
+
+            var result = connection.Query<Estudiante, Inscripcion, Curso, Pago, Concepto, Estudiante>(
+                sql.ToString(),
+                (estudianteQuery, inscripcionQuery, cursoQuery, pagoQuery, conceptoQuery) =>
+                {
+                    if (!estudiantesDictionary.TryGetValue(estudianteQuery.Id, out var existingEstudiante))
+                    {
+                        existingEstudiante = estudianteQuery;
+                        existingEstudiante.Inscripciones = new List<Inscripcion>();
+                        existingEstudiante.Pagos = new List<Pago>();
+                        estudiantesDictionary.Add(estudianteQuery.Id, existingEstudiante);
+                    }
+
+                    if (inscripcionQuery != null && !existingEstudiante.Inscripciones.Any(x => x.Id == inscripcionQuery.Id))
+                    {
+                        existingEstudiante.Inscripciones.Add(inscripcionQuery);
+                    }
+
+                    if (cursoQuery != null)
+                    {
+                        inscripcionQuery.Curso = cursoQuery;
+                    }
+
+                    if (pagoQuery != null && !existingEstudiante.Pagos.Any(x => x.Id == pagoQuery.Id))
+                    {
+                        existingEstudiante.Pagos.Add(pagoQuery);
+                    }
+
+                    if (conceptoQuery != null)
+                    {
+                        pagoQuery.Concepto = conceptoQuery;
+                    }
+
+                    return estudianteQuery;
+
+                }, param: dapperBuilder.Parameters, splitOn: "Id, Id, Id, Id").AsList();
+
+            return estudiantesDictionary.Values.ToList();
         }
 
-        /// <summary>
-        /// Obtiene a un estudiante.
-        /// </summary>
-        /// <param name="legajo"></param>
-        /// <returns></returns>
-        public Estudiante? Get(string legajo)
-        {
-            var estudiantes = Get();
-            if (estudiantes != null && estudiantes.Count > 0)
-            {
-                return estudiantes?.FirstOrDefault(x => x.Legajo == legajo);
-            }
-
-            return default;
-        }
-
-        /// <summary>
-        /// Guarda un estudiante.
-        /// </summary>
-        /// <param name="estudiante"></param>
         public void Post(Estudiante estudiante)
         {
-            var estudiantesExistentes = this.Get();
-            estudiantesExistentes ??= new List<Estudiante>();
+            var sql = new StringBuilder();
+            sql.AppendLine("INSERT INTO Estudiante");
+            sql.AppendLine("(Legajo, Nombre, Direccion, Documento, Telefono, Email, Clave, CambiarClave)");
+            sql.AppendLine("VALUES");
+            sql.AppendLine("(@Legajo, @Nombre, @Direccion, @Documento, @Telefono, @Email, @Clave, @CambiarClave)");
 
-            estudiantesExistentes.Add(estudiante);
-            var estudiantesJson = JsonConvert.SerializeObject(estudiantesExistentes);
-            _archivo.Escribir(estudiantesJson);
+            var parameters = new DynamicParameters();
+            parameters.Add("Legajo", estudiante.Legajo);
+            parameters.Add("Nombre", estudiante.Nombre);
+            parameters.Add("Direccion", estudiante.Direccion);
+            parameters.Add("Documento", estudiante.Documento);
+            parameters.Add("Telefono", estudiante.Telefono);
+            parameters.Add("Email", estudiante.Email);
+            parameters.Add("Clave", estudiante.Clave);
+            parameters.Add("CambiarClave", estudiante.CambiarClave);
+
+            using var connection = new SqlConnection(_connectionString);
+            connection.Execute(sql.ToString(), parameters);
         }
 
-        /// <summary>
-        /// Actualzia un estudiante.
-        /// </summary>
-        /// <param name="estudiante"></param>
         public void Update(Estudiante estudiante)
         {
-            var estudiantes = this.Get();
-            estudiantes ??= new List<Estudiante>();
-            var estudianteExistente = estudiantes?.FirstOrDefault(x => string.Equals(x.Legajo, estudiante.Legajo, StringComparison.OrdinalIgnoreCase));
+            var sql = new StringBuilder();
+            sql.AppendLine("UPDATE Estudiante SET");
+            sql.AppendLine("Legajo = @Legajo");
+            sql.AppendLine(",Nombre = @Nombre");
+            sql.AppendLine(",Direccion = @Direccion");
+            sql.AppendLine(",Documento = @Documento");
+            sql.AppendLine(",Telefono = @Telefono");
+            sql.AppendLine(",Email = @Email");
+            sql.AppendLine(",Clave = @Clave");
+            sql.AppendLine(",CambiarClave = @CambiarClave");
+            sql.AppendLine("WHERE Id = @Id");
 
-            if (estudianteExistente != null)
-            {
-                estudianteExistente.Clave = estudiante.Clave;
-                estudianteExistente.CambiarClave = estudiante.CambiarClave;
-            }
+            var parameters = new DynamicParameters();
+            parameters.Add("Legajo", estudiante.Legajo);
+            parameters.Add("Nombre", estudiante.Nombre);
+            parameters.Add("Direccion", estudiante.Direccion);
+            parameters.Add("Documento", estudiante.Documento);
+            parameters.Add("Telefono", estudiante.Telefono);
+            parameters.Add("Email", estudiante.Email);
+            parameters.Add("Clave", estudiante.Clave);
+            parameters.Add("CambiarClave", estudiante.CambiarClave);
+            parameters.Add("Id", estudiante.Id);
 
-            var estudiantesJson = JsonConvert.SerializeObject(estudiantes);
-            _archivo.Escribir(estudiantesJson);
+            using var connection = new SqlConnection(_connectionString);
+            connection.Execute(sql.ToString(), parameters);
         }
 
-        /// <summary>
-        /// Relaciona cursos con estudiantes.
-        /// </summary>
-        /// <param name="estudiantes"></param>
-        private void RelacionarCursoAEstudiante(List<Estudiante>? estudiantes)
+        private static void BuildFilters(StringBuilder sql, DapperBuilderManager dapperBuilder, EstudianteFilters filters = null)
         {
-            if (estudiantes.Count > 0)
-            {
-                var cursos = _cursoRepositorio.Get();
-                var estudiantesCursos = _estudiantesCursosRepositorio.Get();
-
-                foreach (var estudiante in estudiantes)
-                {
-                    var codigos = estudiantesCursos?.Where(x => x.LegajoEstudiante == estudiante.Legajo)?.Select(x => x.CodigoCurso).ToList();
-
-                    estudiante.Cursos = codigos is null ? new List<Curso>() : cursos.Where(x => codigos.Contains(x.Codigo)).ToList();
-                }
-            }
+            dapperBuilder.AddWhereFilter("Id", "E.Id = @Id", filters?.Id)
+                         .AddWhereFilter("Legajo", "E.Legajo = @Legajo", filters?.Legajo)
+                         .AddWhereFilter("Anio", "I.Anio = @Anio", filters?.Anio)
+                         .AddWhereFilter("Cuatrimestre", "I.Cuatrimestre = @Cuatrimestre", filters?.Cuatrimestre)
+                         .AddWhereFilter("CodigoCurso", "C.Codigo = @CodigoCurso", filters?.CodigoCurso)
+                         .AddWhereFilter("CarreraId", "C.CarreraId = @CarreraId", filters?.CarreraId);
+            dapperBuilder.AddWhereToSQL(sql);
         }
     }
 }
