@@ -137,6 +137,7 @@
             btnInformeListaEspera.Text = "INFORME LISTA ESPERA";
             btnInformeListaEspera.UseMnemonic = false;
             btnInformeListaEspera.UseVisualStyleBackColor = true;
+            btnInformeListaEspera.Click += btnInformeListaEspera_Click;
             // 
             // ReportesForm
             // 

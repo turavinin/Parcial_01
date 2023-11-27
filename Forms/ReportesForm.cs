@@ -45,5 +45,11 @@ namespace Forms
             var form = new ReporteCarreraParametrosForm();
             form.ShowDialog();
         }
+
+        private void btnInformeListaEspera_Click(object sender, EventArgs e)
+        {
+            var form = new ReporteListaEsperaParametrosForm();
+            form.ShowDialog();
+        }
     }
 }

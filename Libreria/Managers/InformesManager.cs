@@ -1,4 +1,5 @@
-﻿using Libreria.Entidades.Filters;
+﻿using Libreria.Entidades;
+using Libreria.Entidades.Filters;
 using Libreria.Helpers;
 using Libreria.Managers.Interface;
 using Libreria.Repositorios;
@@ -10,10 +11,12 @@ namespace Libreria.Managers
     {
         private readonly IEstudianteRepositorio _estudianteRepositorio;
         private readonly IPagoRepositorio _pagoRepositorio;
+        private readonly ICursoManager _cursoManager;
         public InformesManager()
         {
             _pagoRepositorio = new PagoRepositorio();
             _estudianteRepositorio = new EstudianteRepositorio();
+            _cursoManager = new CursoManager();
         }
 
         public void GenerarInformeInscripcionPeriodos(int? año, int? cuatrimestre)
@@ -142,6 +145,33 @@ namespace Libreria.Managers
                        .SetHeaders(headers)
                        .SetData(dataEstudiantes)
                        .Export();
+        }
+
+        public void GenerarInformeListaEspera(int cursoId)
+        {
+            var listaEspera = _cursoManager.GetListaEspera(new ListaEsperaFilters() { CursoId = cursoId });
+
+            var headers = new List<string>() { "Nombre estudiante", "Curso", "Fecha Agregado" };
+            var dataListaEsperas = new List<List<string>>();
+
+            foreach (var estudianteEspera in listaEspera)
+            {
+                var data = new List<string>()
+                {
+                        estudianteEspera.Estudiante.Nombre,
+                        estudianteEspera.Curso.Nombre,
+                        estudianteEspera.FechaAgregado.ToString()
+                };
+
+                dataListaEsperas.Add(data);
+            }
+
+            var excelHelper = new ExcelHelper();
+            excelHelper.SetFileData("InformeListaEspera", "Informe Lista Espera")
+                       .SetHeaders(headers)
+                       .SetData(dataListaEsperas)
+                       .Export();
+
         }
     }
 }
